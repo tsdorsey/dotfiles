@@ -1,8 +1,12 @@
 # shortcut to this dotfiles path is $ZSH
 export ZSH=$HOME/.dotfiles
 
+export ZSH_THEME="bullet-train"
+
+plugins=(git atom brew npm)
+
 # your project folder that we can `c [tab]` to
-export PROJECTS=~/Code
+export PROJECTS=~/projects
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
 # of your main dotfiles repository (which may be public, like this one), but
