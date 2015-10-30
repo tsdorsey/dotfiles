@@ -9,7 +9,7 @@ export EDITOR=atom
 
 # Values relating to oh-my-zsh.
 export ZSH=$HOME/.oh-my-zsh
-export ZSH_THEME="bullet-train"
+export ZSH_THEME="powerlevel9k/powerlevel9k"
 plugins=(git atom brew npm)
 
 # Stash your environment variables in ~/.localrc. This means they'll stay out
