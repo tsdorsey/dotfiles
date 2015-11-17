@@ -10,9 +10,6 @@
   helper = cache --timeout=3600
 [alias]
   co = checkout
-  promote = !$ZSHDOT/bin/git-promote
-  wtf     = !$ZSHDOT/bin/git-wtf
-  rank-contributors = !$ZSHDOT/bin/git-rank-contributors
   count   = !git shortlog -sn
   last = log -1 --stat
 	cp = cherry-pick
