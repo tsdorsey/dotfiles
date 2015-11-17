@@ -1,4 +1,6 @@
 "*":
+  "exception-reporting":
+    userId: "da12a123-0b08-19c5-f3af-964885fa16c4"
   editor:
     showIndentGuide: true
     fontFamily: "Menlo"
@@ -38,3 +40,6 @@
   tabs:
     usePreviewTabs: true
   "status-bar": {}
+  minimap:
+    plugins:
+      "highlight-selected": true
