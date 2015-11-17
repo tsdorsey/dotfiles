@@ -1,0 +1,57 @@
+# Sample gitconfig
+#
+
+[hub]
+  protocol = git
+[user]
+  name = Trevor Dorsey
+  email = tsdorsey@gmail.com
+[credential]
+  helper = cache --timeout=3600
+[alias]
+  co = checkout
+  promote = !$ZSHDOT/bin/git-promote
+  wtf     = !$ZSHDOT/bin/git-wtf
+  rank-contributors = !$ZSHDOT/bin/git-rank-contributors
+  count   = !git shortlog -sn
+  last = log -1 --stat
+	cp = cherry-pick
+	cl = clone
+	cm = commit -m
+	st = status -sb
+	br = branch
+	unstage = reset HEAD --
+	dc = diff --cached
+	lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
+[color]
+  diff = auto
+  status = auto
+  branch = auto
+  ui = true
+[core]
+  excludesfile = ~/.gitignore
+  editor = $EDITOR
+[apply]
+  whitespace = nowarn
+[mergetool]
+  keeptemporaries = false
+  keepbackups = false
+  prompt = false
+  trustexitcode = false
+[help]
+  autocorrect = 1
+[push]
+  # See `git help config` (search for push.default)
+  # for more information on different options of the below setting.
+  #
+  # Setting to git 2.0 default to suppress warning message
+  default = simple
+[diff]
+	tool = diffmerge
+[difftool "diffmerge"]
+	cmd = "/c/Users/tdorsey/AppData/Roaming/SourceGear/DiffMerge/sgdm_cygwin.sh" /p1="$LOCAL" /p2="$REMOTE"
+[merge]
+	tool = diffmerge
+[mergetool "diffmerge"]
+	trustExitCode = true
+	cmd = "/c/Users/tdorsey/AppData/Roaming/SourceGear/DiffMerge/sgdm_cygwin.sh" /merge /result="$MERGED" /p1="$LOCAL" /p2="$BASE" /p3="$REMOTE"
