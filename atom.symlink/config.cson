@@ -26,6 +26,7 @@
       "background-tips"
       "exception-reporting"
       "metrics"
+      "jslint"
     ]
   "spell-check":
     grammars: [
@@ -43,3 +44,5 @@
   minimap:
     plugins:
       "highlight-selected": true
+  linter:
+    showErrorPanel: false

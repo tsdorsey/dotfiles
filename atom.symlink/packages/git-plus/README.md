@@ -1,4 +1,4 @@
-# Git-Plus package
+# Git-Plus package ![Build Status](https://travis-ci.org/akonwi/git-plus.svg?branch=5.5.0)
 
 [![endorse](https://api.coderwall.com/akonwi/endorsecount.png)](https://coderwall.com/akonwi)
 
@@ -8,12 +8,21 @@ vim-fugitive like package for atom. make commits and other git things without th
 
 ## Usage
 
-# IMPORTANT: Make sure your gitconfig file is configured or at least your `user.email` and `user.name` variables are initialized
+# IMPORTANT:
+Make sure your gitconfig file is configured or at least your `user.email` and `user.name` variables are initialized.
+
+Also, the package currently favors an ssh setup that doesn't expect to be prompted for credentials in order to push/pull, .etc.
 
 ### Git-Plus Palette
 >- `Cmd-Shift-H` on MacOS
 >- `Ctrl-Shift-H` on Windows + Linux
 >- `Git Plus: Menu` on the atom command palette.
+
+### Push/Pull/Fetch notifications
+Notifications will appear in a console output above the status bar.
+This view can be toggled by clicking the pin icon in the bottom right of the status bar.
+
+![screenshot](https://raw.githubusercontent.com/akonwi/git-plus/5.5.0/pin.png)
 
 ### Commands
 _Commands are accessible for keybindings by dasherizing the command title._
@@ -22,6 +31,7 @@ _Commands are accessible for keybindings by dasherizing the command title._
 > Git Add All Commit And Push == `git-plus:add-all-commit-and-push`
 
   __Note: This list is not exclusive__
+
 1. `Git add [all]`
 
   Git add will add the current file and 'add all' will add all changed files
@@ -85,6 +95,9 @@ _Commands are accessible for keybindings by dasherizing the command title._
 
 1. Fork it
 2. Create your feature branch (`git checkout -b my-new-feature`)
-3. Commit your changes (`git commit -am 'Add some feature'`)
-4. Push to the branch (`git push origin my-new-feature`)
-5. Create new Pull Request
+3. Write tests
+4. Make your changes
+5. Run `apm test`
+6. Commit your changes (`git commit -am 'Add some feature'`)
+7. Push to the branch (`git push origin my-new-feature`)
+8. Create new Pull Request

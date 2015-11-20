@@ -4,7 +4,7 @@
   "author": {
     "name": "atom-community"
   },
-  "version": "1.10.0",
+  "version": "1.11.2",
   "description": "A Base Linter with Cow Powers",
   "repository": {
     "type": "git",
@@ -30,6 +30,11 @@
     }
   },
   "providedServices": {
+    "linter-indie": {
+      "versions": {
+        "1.0.0": "provideIndie"
+      }
+    },
     "linter-plus-self": {
       "versions": {
         "0.1.0": "provideLinter"
@@ -46,79 +51,81 @@
     "url": "https://github.com/atom-community/linter/issues"
   },
   "homepage": "https://github.com/atom-community/linter#readme",
-  "_id": "linter@1.10.0",
-  "_shasum": "07a64cae20afb91ef46a3b8e6b25b8b3a84c6c33",
-  "_resolved": "file:..\\d-1151010-43040-9ndqqx\\package.tgz",
-  "_from": "..\\d-1151010-43040-9ndqqx\\package.tgz",
+  "_id": "linter@1.11.2",
+  "_shasum": "f5e6e28aebc0cd86941d9687ee94b7a55b053144",
+  "_resolved": "file:../d-1151019-31548-1a1urk6/package.tgz",
+  "_from": "../d-1151019-31548-1a1urk6/package.tgz",
   "_atomModuleCache": {
     "version": 1,
     "dependencies": [
       {
         "name": "interact.js",
         "version": "1.2.6",
-        "path": "node_modules\\interact.js\\interact.js"
+        "path": "node_modules/interact.js/interact.js"
       },
       {
         "name": "minimatch",
         "version": "3.0.0",
-        "path": "node_modules\\minimatch\\minimatch.js"
+        "path": "node_modules/minimatch/minimatch.js"
       },
       {
         "name": "brace-expansion",
         "version": "1.1.1",
-        "path": "node_modules\\minimatch\\node_modules\\brace-expansion\\index.js"
+        "path": "node_modules/minimatch/node_modules/brace-expansion/index.js"
       },
       {
         "name": "balanced-match",
         "version": "0.2.1",
-        "path": "node_modules\\minimatch\\node_modules\\brace-expansion\\node_modules\\balanced-match\\index.js"
+        "path": "node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/index.js"
       },
       {
         "name": "concat-map",
         "version": "0.0.1",
-        "path": "node_modules\\minimatch\\node_modules\\brace-expansion\\node_modules\\concat-map\\index.js"
+        "path": "node_modules/minimatch/node_modules/brace-expansion/node_modules/concat-map/index.js"
       }
     ],
     "extensions": {
       ".json": [
         "coffeelint.json",
-        "node_modules\\interact.js\\bower.json",
-        "node_modules\\interact.js\\package.json",
-        "node_modules\\minimatch\\node_modules\\brace-expansion\\node_modules\\balanced-match\\package.json",
-        "node_modules\\minimatch\\node_modules\\brace-expansion\\node_modules\\concat-map\\package.json",
-        "node_modules\\minimatch\\node_modules\\brace-expansion\\package.json",
-        "node_modules\\minimatch\\package.json",
+        "node_modules/interact.js/bower.json",
+        "node_modules/interact.js/package.json",
+        "node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/package.json",
+        "node_modules/minimatch/node_modules/brace-expansion/node_modules/concat-map/package.json",
+        "node_modules/minimatch/node_modules/brace-expansion/package.json",
+        "node_modules/minimatch/package.json",
         "package.json"
       ],
       ".coffee": [
-        "lib\\commands.coffee",
-        "lib\\helpers.coffee",
-        "lib\\linter.coffee",
-        "lib\\main.coffee",
-        "lib\\validate.coffee"
+        "lib/commands.coffee",
+        "lib/helpers.coffee",
+        "lib/linter.coffee",
+        "lib/main.coffee",
+        "lib/validate.coffee"
       ],
       ".js": [
-        "lib\\editor-linter.js",
-        "lib\\editor-registry.js",
-        "lib\\linter-registry.js",
-        "lib\\linter-views.js",
-        "lib\\message-registry.js",
-        "lib\\ui\\bottom-container.js",
-        "lib\\ui\\bottom-panel.js",
-        "lib\\ui\\bottom-status.js",
-        "lib\\ui\\bottom-tab.js",
-        "lib\\ui\\message-bubble.js",
-        "lib\\ui\\message-element.js",
-        "node_modules\\interact.js\\dist\\interact.js",
-        "node_modules\\interact.js\\dist\\interact.min.js",
-        "node_modules\\interact.js\\interact.js",
-        "node_modules\\minimatch\\minimatch.js",
-        "node_modules\\minimatch\\node_modules\\brace-expansion\\example.js",
-        "node_modules\\minimatch\\node_modules\\brace-expansion\\index.js",
-        "node_modules\\minimatch\\node_modules\\brace-expansion\\node_modules\\balanced-match\\example.js",
-        "node_modules\\minimatch\\node_modules\\brace-expansion\\node_modules\\balanced-match\\index.js",
-        "node_modules\\minimatch\\node_modules\\brace-expansion\\node_modules\\concat-map\\example\\map.js",
-        "node_modules\\minimatch\\node_modules\\brace-expansion\\node_modules\\concat-map\\index.js"
+        "lib/editor-linter.js",
+        "lib/editor-registry.js",
+        "lib/indie-registry.js",
+        "lib/indie.js",
+        "lib/linter-registry.js",
+        "lib/linter-views.js",
+        "lib/message-registry.js",
+        "lib/ui/bottom-container.js",
+        "lib/ui/bottom-panel.js",
+        "lib/ui/bottom-status.js",
+        "lib/ui/bottom-tab.js",
+        "lib/ui/message-bubble.js",
+        "lib/ui/message-element.js",
+        "node_modules/interact.js/dist/interact.js",
+        "node_modules/interact.js/dist/interact.min.js",
+        "node_modules/interact.js/interact.js",
+        "node_modules/minimatch/minimatch.js",
+        "node_modules/minimatch/node_modules/brace-expansion/example.js",
+        "node_modules/minimatch/node_modules/brace-expansion/index.js",
+        "node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/example.js",
+        "node_modules/minimatch/node_modules/brace-expansion/node_modules/balanced-match/index.js",
+        "node_modules/minimatch/node_modules/brace-expansion/node_modules/concat-map/example/map.js",
+        "node_modules/minimatch/node_modules/brace-expansion/node_modules/concat-map/index.js"
       ]
     },
     "folders": [
@@ -126,10 +133,10 @@
         "paths": [
           "",
           "lib",
-          "lib\\ui",
+          "lib/ui",
           "spec",
-          "spec\\config",
-          "spec\\ui"
+          "spec/config",
+          "spec/ui"
         ],
         "dependencies": {
           "interact.js": "^1.2.5",
@@ -138,7 +145,7 @@
       },
       {
         "paths": [
-          "node_modules\\minimatch"
+          "node_modules/minimatch"
         ],
         "dependencies": {
           "brace-expansion": "^1.0.0"
@@ -146,7 +153,7 @@
       },
       {
         "paths": [
-          "node_modules\\minimatch\\node_modules\\brace-expansion"
+          "node_modules/minimatch/node_modules/brace-expansion"
         ],
         "dependencies": {
           "balanced-match": "^0.2.0",
