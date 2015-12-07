@@ -8,6 +8,8 @@
     fontSize: 15
     softWrapAtPreferredLineLength: false
     backUpBeforeSaving: true
+    scrollPastEnd: true
+    preferredLineLength: 100
   core:
     ignoredNames: [
       ".bundle"
@@ -46,3 +48,4 @@
       "highlight-selected": true
   linter:
     showErrorPanel: false
+  "git-log": {}

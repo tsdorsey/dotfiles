@@ -42,13 +42,13 @@
   # for more information on different options of the below setting.
   #
   # Setting to git 2.0 default to suppress warning message
-  default = simple
+	default = current
 [diff]
 	tool = diffmerge
 [difftool "diffmerge"]
-	cmd = "/c/Users/tdorsey/AppData/Roaming/SourceGear/DiffMerge/sgdm_cygwin.sh" /p1="$LOCAL" /p2="$REMOTE"
+	cmd = diffmerge "$LOCAL" "$REMOTE"
 [merge]
 	tool = diffmerge
 [mergetool "diffmerge"]
 	trustExitCode = true
-	cmd = "/c/Users/tdorsey/AppData/Roaming/SourceGear/DiffMerge/sgdm_cygwin.sh" /merge /result="$MERGED" /p1="$LOCAL" /p2="$BASE" /p3="$REMOTE"
+	cmd = diffmerge --merge --result="$MERGED" "$LOCAL" "$BASE" "$REMOTE"
