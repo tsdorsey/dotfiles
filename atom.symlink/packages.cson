@@ -5,6 +5,16 @@ packages:
   version: 1.2.2
 'file-icons':
   version: 1.6.12
+'git-control':
+  version: undefined
+'git-diff-details':
+  version: undefined
+'git-difftool':
+  version: undefined
+'git-history':
+  version: undefined
+'git-log':
+  version: undefined
 'git-plus':
   version: 5.6.5
 'highlight-selected':
@@ -25,5 +35,13 @@ packages:
   version: 4.3.1
 'open-recent':
   version: 4.0.1
+'open-gitup':
+  version: 0.0.2
 'react':
   version: 0.12.10
+'show-origin':
+  version: 0.2.0
+'tree-view-git-branch':
+  version: undefined
+'tree-view-git-status':
+  version: undefined
