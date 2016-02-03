@@ -24,7 +24,7 @@
   ui = true
 [core]
   excludesfile = ~/.gitignore
-  editor = $EDITOR
+	editor = atom --safe --wait
 [apply]
   whitespace = nowarn
 [mergetool]
@@ -44,4 +44,9 @@
   tool = diffmerge
 [mergetool "diffmerge"]
   trustExitCode = true
+  keepbackups = false
   cmd = diffmerge --merge --result="$MERGED" "$LOCAL" "$BASE" "$REMOTE"
+[filter "lfs"]
+	clean = git-lfs clean %f
+	smudge = git-lfs smudge %f
+	required = true
