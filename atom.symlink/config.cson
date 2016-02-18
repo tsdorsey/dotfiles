@@ -35,6 +35,7 @@
   "git-log": {}
   linter:
     showErrorPanel: false
+  "markdown-preview": {}
   minimap:
     plugins:
       "highlight-selected": true
