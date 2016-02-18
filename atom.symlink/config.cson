@@ -1,16 +1,14 @@
 "*":
-  "exception-reporting":
-    userId: "da12a123-0b08-19c5-f3af-964885fa16c4"
-  editor:
-    showIndentGuide: true
-    fontFamily: "Menlo"
-    invisibles: {}
-    fontSize: 15
-    softWrapAtPreferredLineLength: false
-    backUpBeforeSaving: true
-    scrollPastEnd: true
-    preferredLineLength: 100
+  "atom-beautify":
+    _analyticsUserId: "798dbaa8-dc67-4fa3-aa15-738312108e7e"
   core:
+    disabledPackages: [
+      "background-tips"
+      "exception-reporting"
+      "metrics"
+      "jslint"
+    ]
+    hideGitIgnoredFiles: true
     ignoredNames: [
       ".bundle"
       ".git"
@@ -23,29 +21,33 @@
       "atom-dark-ui"
       "solarized-dark-syntax"
     ]
-    hideGitIgnoredFiles: true
-    disabledPackages: [
-      "background-tips"
-      "exception-reporting"
-      "metrics"
-      "jslint"
-    ]
+  editor:
+    backUpBeforeSaving: true
+    fontFamily: "Menlo"
+    invisibles: {}
+    preferredLineLength: 100
+    scrollPastEnd: true
+    showIndentGuide: true
+    softWrapAtPreferredLineLength: false
+  emmet: {}
+  "exception-reporting":
+    userId: "da12a123-0b08-19c5-f3af-964885fa16c4"
+  "git-log": {}
+  linter:
+    showErrorPanel: false
+  minimap:
+    plugins:
+      "highlight-selected": true
+  "release-notes":
+    viewedVersion: "0.89.0"
   "spell-check":
     grammars: [
       "text.plain"
       "source.gfm"
       "text.git-commit"
     ]
-  welcome:
-    showOnStartup: false
-  "release-notes":
-    viewedVersion: "0.89.0"
+  "status-bar": {}
   tabs:
     usePreviewTabs: true
-  "status-bar": {}
-  minimap:
-    plugins:
-      "highlight-selected": true
-  linter:
-    showErrorPanel: false
-  "git-log": {}
+  welcome:
+    showOnStartup: false
