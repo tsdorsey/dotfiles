@@ -6,6 +6,8 @@
 [credential]
   helper = cache --timeout=3600
 [alias]
+  bd = branch -d
+  bD = branch -D
   co = checkout
   count   = !git shortlog -sn
   last = log -1 --stat
@@ -16,7 +18,7 @@
   dc = diff --cached
   dt = difftool
   dtc = difftool --cached
-  lg = log --graph --pretty=format:'%Cred%h%Creset -%C(yellow)%d%Creset %s %Cgreen(%cr) %Cblue<%an>%Creset' --abbrev-commit --date=relative --all
+  lg = log --graph --date=relative --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
 [color]
   diff = auto
   status = auto
@@ -42,11 +44,14 @@
   cmd = diffmerge "$LOCAL" "$REMOTE"
 [merge]
   tool = diffmerge
+  keepbackups = false
 [mergetool "diffmerge"]
   trustExitCode = true
-  keepbackups = false
   cmd = diffmerge --merge --result="$MERGED" "$LOCAL" "$BASE" "$REMOTE"
 [filter "lfs"]
 	clean = git-lfs clean %f
 	smudge = git-lfs smudge %f
 	required = true
+[pager]
+	diff = diff-so-fancy | less --tabs=1,5 -RFX
+	show = diff-so-fancy | less --tabs=1,5 -RFX
