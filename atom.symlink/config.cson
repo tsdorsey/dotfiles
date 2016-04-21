@@ -1,12 +1,14 @@
 "*":
   "atom-beautify":
-    _analyticsUserId: "798dbaa8-dc67-4fa3-aa15-738312108e7e"
+    general:
+      _analyticsUserId: "798dbaa8-dc67-4fa3-aa15-738312108e7e"
   core:
     disabledPackages: [
       "background-tips"
       "exception-reporting"
       "metrics"
       "jslint"
+      "linter-eslint"
     ]
     hideGitIgnoredFiles: true
     ignoredNames: [
@@ -35,10 +37,15 @@
   "git-log": {}
   linter:
     showErrorPanel: false
+  "linter-eslint": {}
   "markdown-preview": {}
   minimap:
+    absoluteMode: true
     plugins:
       "highlight-selected": true
+      "highlight-selectedDecorationsZIndex": 0
+  pigments: {}
+  react: {}
   "release-notes":
     viewedVersion: "0.89.0"
   "spell-check":
@@ -50,5 +57,18 @@
   "status-bar": {}
   tabs:
     usePreviewTabs: true
+  "todo-show":
+    showInTable: [
+      "Text"
+      "Type"
+      "File"
+      "Line"
+    ]
   welcome:
     showOnStartup: false
+".coffee.jsx.source":
+  editor:
+    preferredLineLength: 100
+".js.jsx.source":
+  editor:
+    preferredLineLength: 100
