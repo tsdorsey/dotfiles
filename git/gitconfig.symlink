@@ -6,15 +6,12 @@
 [credential]
   helper = cache --timeout=3600
 [alias]
+  st = status -sb
   bd = branch -d
   bD = branch -D
   co = checkout
-  count   = !git shortlog -sn
-  last = log -1 --stat
-  cp = cherry-pick
   cm = commit -m
   st = status -sb
-  unstage = reset HEAD --
   dc = diff --cached
   dt = difftool
   dtc = difftool --cached
