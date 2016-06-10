@@ -8,9 +8,11 @@
 [alias]
   st = status -sb
   bd = branch -d
-  bD = branch -D
+  bfd = branch -D
+  bl = branch --list
   co = checkout
   cm = commit -m
+  ca = commit --amend --no-edit
   st = status -sb
   dc = diff --cached
   dt = difftool
@@ -32,7 +34,7 @@
   prompt = false
   trustexitcode = false
 [help]
-  autocorrect = 1
+  autocorrect = 0
 [push]
   default = current
 [diff]
