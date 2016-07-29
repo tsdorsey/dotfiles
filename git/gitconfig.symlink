@@ -33,6 +33,7 @@
   keepbackups = false
   prompt = false
   trustexitcode = false
+	keepbackup = false
 [help]
   autocorrect = 0
 [push]
@@ -45,7 +46,7 @@
   tool = diffmerge
   keepbackups = false
 [mergetool "diffmerge"]
-  trustExitCode = true
+  trustexitcode = true
   cmd = diffmerge --merge --result="$MERGED" "$LOCAL" "$BASE" "$REMOTE"
 [filter "lfs"]
 	clean = git-lfs clean %f

@@ -9,6 +9,9 @@
       "metrics"
       "jslint"
       "linter-eslint"
+      "math-selection"
+      "linter"
+      "linter-coffeelint"
     ]
     hideGitIgnoredFiles: true
     ignoredNames: [
@@ -34,6 +37,7 @@
   emmet: {}
   "exception-reporting":
     userId: "da12a123-0b08-19c5-f3af-964885fa16c4"
+  "file-icons": {}
   "git-log": {}
   linter:
     showErrorPanel: false
@@ -64,11 +68,30 @@
       "File"
       "Line"
     ]
+  "tree-view": {}
   welcome:
     showOnStartup: false
+".basic.html.text":
+  editor:
+    preferredLineLength: 100
 ".coffee.jsx.source":
   editor:
     preferredLineLength: 100
+".coffee.source":
+  editor:
+    preferredLineLength: 100
+".diff.source":
+  editor:
+    preferredLineLength: 100
+".html.spacebars.text":
+  editor:
+    preferredLineLength: 100
+".ini.source":
+  editor:
+    preferredLineLength: 100
 ".js.jsx.source":
+  editor:
+    preferredLineLength: 100
+".js.source":
   editor:
     preferredLineLength: 100
