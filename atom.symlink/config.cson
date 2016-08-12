@@ -21,6 +21,7 @@
       "repositories"
       "tmp"
       "vendor"
+      "node_modules"
     ]
     themes: [
       "atom-dark-ui"
@@ -58,6 +59,12 @@
       "source.gfm"
       "text.git-commit"
     ]
+  "split-diff":
+    diffWords: true
+    ignoreWhitespace: true
+    leftEditorColor: "red"
+    rightEditorColor: "green"
+    syncHorizontalScroll: true
   "status-bar": {}
   tabs:
     usePreviewTabs: true
