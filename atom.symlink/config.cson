@@ -5,8 +5,6 @@
   core:
     disabledPackages: [
       "background-tips"
-      "exception-reporting"
-      "metrics"
       "jslint"
       "linter-eslint"
       "math-selection"
