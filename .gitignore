@@ -9,3 +9,5 @@ atom.symlink/storage
 atom.symlink/themes
 atom.symlink/git-time-machine
 atom.symlink/split-diff
+
+aws.symlink/credentials

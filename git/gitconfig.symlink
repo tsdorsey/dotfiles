@@ -14,6 +14,7 @@
   cm = commit -m
   ca = commit --amend --no-edit
   st = status -sb
+  d  = diff
   dc = diff --cached
   dt = difftool
   dtc = difftool --cached

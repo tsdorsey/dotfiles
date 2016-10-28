@@ -35,3 +35,8 @@
   'Console log':
     'prefix': 'log'
     'body': 'console.log($1);'
+
+'.text.html.basic':
+  'paragraph':
+    'prefix': 'pp'
+    'body': '<p>$1</p>'

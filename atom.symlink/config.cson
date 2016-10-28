@@ -5,11 +5,14 @@
   core:
     disabledPackages: [
       "background-tips"
+      "exception-reporting"
+      "metrics"
       "jslint"
       "linter-eslint"
       "math-selection"
       "linter"
       "linter-coffeelint"
+      "whitespace"
     ]
     hideGitIgnoredFiles: true
     ignoredNames: [
@@ -21,6 +24,7 @@
       "vendor"
       "node_modules"
     ]
+    telemetryConsent: "limited"
     themes: [
       "atom-dark-ui"
       "solarized-dark-syntax"
@@ -28,6 +32,7 @@
   editor:
     backUpBeforeSaving: true
     fontFamily: "Menlo"
+    fontSize: 13
     invisibles: {}
     preferredLineLength: 100
     scrollPastEnd: true
@@ -51,7 +56,9 @@
       "find-and-replaceDecorationsZIndex": 0
       "highlight-selected": true
       "highlight-selectedDecorationsZIndex": 0
-  pigments: {}
+  pigments:
+    autocompleteSuggestionsFromValue: true
+    sassShadeAndTintImplementation: "bourbon"
   react: {}
   "release-notes":
     viewedVersion: "0.89.0"
@@ -71,6 +78,17 @@
   tabs:
     usePreviewTabs: true
   "todo-show":
+    findTheseTodos: [
+      "FIXME"
+      "TODO"
+      "CHANGED"
+      "XXX"
+      "IDEA"
+      "HACK"
+      "NOTE"
+      "REVIEW"
+      "TESTING"
+    ]
     showInTable: [
       "Text"
       "Type"
@@ -78,6 +96,7 @@
       "Line"
     ]
   "tree-view": {}
+  "tree-view-git-status": {}
   welcome:
     showOnStartup: false
 ".basic.html.text":
@@ -90,6 +109,9 @@
   editor:
     preferredLineLength: 100
 ".diff.source":
+  editor:
+    preferredLineLength: 100
+".editorconfig.source":
   editor:
     preferredLineLength: 100
 ".html.spacebars.text":
