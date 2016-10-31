@@ -1,4 +1,8 @@
-[default]
+[profile tsdorsey]
+region = us-west-2
+output = json
+
+[profile foyyay]
 region = us-west-2
 output = json
 s3 =
