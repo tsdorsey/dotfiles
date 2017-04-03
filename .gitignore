@@ -5,6 +5,7 @@ atom.symlink/.storage
 atom.symlink/blob-store/
 atom.symlink/compile-cache/
 atom.symlink/packages
+atom.symlink/recovery
 atom.symlink/storage
 atom.symlink/themes
 atom.symlink/git-time-machine
