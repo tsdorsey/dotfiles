@@ -2,17 +2,16 @@
   "atom-beautify":
     general:
       _analyticsUserId: "798dbaa8-dc67-4fa3-aa15-738312108e7e"
+  "autocomplete-plus": {}
   core:
     disabledPackages: [
       "background-tips"
       "exception-reporting"
       "metrics"
       "jslint"
-      "linter-eslint"
-      "math-selection"
-      "linter"
-      "linter-coffeelint"
       "whitespace"
+      "language-mustache"
+      "atom-language-velocity"
     ]
     hideGitIgnoredFiles: true
     ignoredNames: [
@@ -26,8 +25,8 @@
     ]
     telemetryConsent: "limited"
     themes: [
-      "atom-dark-ui"
-      "solarized-dark-syntax"
+      "solarized-light-ui"
+      "solarized-light-syntax"
     ]
   editor:
     backUpBeforeSaving: true
@@ -59,6 +58,14 @@
   pigments:
     autocompleteSuggestionsFromValue: true
     sassShadeAndTintImplementation: "bourbon"
+  "prettier-atom":
+    formatOnSave: true
+    formatOnSaveOptions:
+      enabled: true
+    prettierOptions:
+      singleQuote: true
+      trailingComma: "es5"
+    printWidth: 100
   react: {}
   "release-notes":
     viewedVersion: "0.89.0"
@@ -73,6 +80,7 @@
     ignoreWhitespace: true
     leftEditorColor: "red"
     rightEditorColor: "green"
+    scrollSyncType: "Vertical + Horizontal"
     syncHorizontalScroll: true
   "status-bar": {}
   tabs:

@@ -36,7 +36,7 @@
     'prefix': 'log'
     'body': 'console.log($1);'
 
-'.text.html.basic':
+'.text.html, .text.html .meta.scope.between-tag-pair, .text.html .punctuation.tag.begin':
   'paragraph':
-    'prefix': 'pp'
+    'prefix': 'p'
     'body': '<p>$1</p>'
