@@ -17,3 +17,14 @@ function title() {
   esac
 }
 
+function it2prof() {
+  echo -e "\033]50;SetProfile=$1\a";
+}
+
+function dark() {
+  it2prof "goDark";
+}
+
+function light() {
+  it2prof "lightenUp";
+}
