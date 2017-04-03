@@ -15,6 +15,6 @@ if [[ -d "$NVM_DIR" ]]; then
       nvm use default
     fi
   }
-  add-zsh-hook chpwd load-nvmrc
-  load-nvmrc
+  # add-zsh-hook chpwd load-nvmrc
+  # load-nvmrc
 fi
