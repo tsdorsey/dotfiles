@@ -12,6 +12,37 @@
       "whitespace"
       "language-mustache"
       "atom-language-velocity"
+      "atom-dynamic-macro"
+      "platformio-ide-terminal"
+      "platformio-ide-debugger"
+      "platformio-ide"
+      "tool-bar"
+      "atom-handlebars"
+      "atom-autocomplete-php"
+      "atom-increment"
+      "atom-keyboard-macros"
+      "autocomplete-clang"
+      "autocomplete-json"
+      "autoprefixer"
+      "blade-snippets"
+      "build"
+      "color-picker"
+      "git-history"
+      "git-time-machine"
+      "jump-to-import"
+      "language-spacebars"
+      "laravel"
+      "laravel-forms-bootstrap-snippets"
+      "linter-gcc"
+      "open-git-modified-files"
+      "open-recent"
+      "open-this"
+      "php-composer-completion"
+      "php-cs-fixer"
+      "php-fmt"
+      "php-hyperclick"
+      "serverless-dashboard"
+      "show-origin"
     ]
     hideGitIgnoredFiles: true
     ignoredNames: [
@@ -22,11 +53,15 @@
       "tmp"
       "vendor"
       "node_modules"
+      ".pioenvs"
+      ".piolibdeps"
+      ".clang_complete"
+      ".gcc-flags.json"
     ]
     telemetryConsent: "limited"
     themes: [
-      "solarized-light-ui"
-      "solarized-light-syntax"
+      "atom-solarized-dark-ui"
+      "solarized-dark-syntax"
     ]
   editor:
     backUpBeforeSaving: true
@@ -40,11 +75,14 @@
   emmet: {}
   "exception-reporting":
     userId: "da12a123-0b08-19c5-f3af-964885fa16c4"
-  "file-icons": {}
+  "file-icons":
+    coloured: false
   "git-log": {}
-  linter:
-    showErrorPanel: false
+  linter: {}
   "linter-eslint": {}
+  "linter-ui-default":
+    showPanel: true
+    useBusySignal: false
   "markdown-preview": {}
   minimap:
     absoluteMode: true
@@ -55,6 +93,8 @@
       "find-and-replaceDecorationsZIndex": 0
       "highlight-selected": true
       "highlight-selectedDecorationsZIndex": 0
+  "php-fmt":
+    noBackup: true
   pigments:
     autocompleteSuggestionsFromValue: true
     sassShadeAndTintImplementation: "bourbon"
@@ -62,6 +102,7 @@
     formatOnSave: true
     formatOnSaveOptions:
       enabled: true
+      showInStatusBar: true
     prettierOptions:
       singleQuote: true
       trailingComma: "es5"
@@ -103,13 +144,24 @@
       "File"
       "Line"
     ]
-  "tree-view": {}
+  "tool-bar":
+    position: "Left"
+    visible: false
+  "tree-view":
+    hideIgnoredNames: true
   "tree-view-git-status": {}
   welcome:
     showOnStartup: false
+  zentabs:
+    maximumOpenedTabs: 8
+    neverCloseUnsaved: true
 ".basic.html.text":
   editor:
     preferredLineLength: 100
+".blade.html.php.text":
+  editor:
+    commentEnd: " --}}"
+    commentStart: "{{-- "
 ".coffee.jsx.source":
   editor:
     preferredLineLength: 100

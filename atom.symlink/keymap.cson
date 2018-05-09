@@ -33,4 +33,3 @@
   'alt-t alt-o': 'tabs:close-other-tabs'
   'alt-t left': 'tabs:close-tabs-to-left'
   'alt-t right': 'tabs:close-tabs-to-right'
-  

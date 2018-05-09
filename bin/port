@@ -1,0 +1,17 @@
+#!/bin/sh
+#
+# Get the list of processes running on a given port.
+
+if [ "$1" = "" ] ; then
+  port='3000'
+else
+  port=$1
+fi
+
+if [ "$2" = "" ] ; then
+  proto='tcp'
+else
+  proto=$2
+fi
+
+lsof -i $proto:$port

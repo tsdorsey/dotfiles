@@ -26,15 +26,25 @@
     'prefix': 'log'
     'body': 'console.log($1)'
 
-'.source.js.jsx':
-  'Console log':
-    'prefix': 'log'
-    'body': 'console.log($1);'
-
 '.source.js':
   'Console log':
     'prefix': 'log'
     'body': 'console.log($1);'
+  'Console warn':
+    'prefix': 'warn'
+    'body': 'console.warn($1);'
+  'Console error':
+    'prefix': 'error'
+    'body': 'console.error($1);'
+  'Import Module':
+    'prefix': 'imp'
+    'body': 'import $1 from \'$2\';'
+  'Import lodash module':
+    'prefix': 'ild'
+    'body': "import _$1 from 'lodash/$1';"
+  'Export Constant':
+    'prefix': 'excon'
+    'body': "export const $1 = '$1';"
 
 '.text.html, .text.html .meta.scope.between-tag-pair, .text.html .punctuation.tag.begin':
   'paragraph':
