@@ -60,15 +60,14 @@
     ]
     telemetryConsent: "limited"
     themes: [
-      "atom-solarized-dark-ui"
-      "solarized-dark-syntax"
+      "solarized-light-ui"
+      "solarized-light-syntax"
     ]
   editor:
     backUpBeforeSaving: true
     fontFamily: "Menlo"
     fontSize: 13
     invisibles: {}
-    preferredLineLength: 100
     scrollPastEnd: true
     showIndentGuide: true
     softWrapAtPreferredLineLength: false

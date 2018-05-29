@@ -1,0 +1,44 @@
+addAttributesToSVGElement: false, # adds attributes to an outer <svg> element.
+addClassesToSVGElement: false, # adds classnames to an outer <svg> element.
+cleanupAttrs: false, # cleanups attributes from newlines, trailing and repeating spaces.
+cleanupEnableBackground: false, # remove or cleanup enable-background attribute when possible.
+cleanupIDs: false, # removes unused IDs and minifies used.
+cleanupListOfValues: false, # rounds list of values to the fixed precision.
+cleanupNumericValues: false, # rounds numeric values to the fixed precision, removes default ‘px’ units.
+collapseGroups: false, # collapses useless groups.
+convertColors: false, # converts colors: rgb() to #rrggbb and #rrggbb to #rgb.
+convertPathData: false, # optimizes path data: writes in shorter form, applies transformations.
+convertShapeToPath: false, # converts basic shapes to more compact path form.
+convertStyleToAttrs: false, # converts style to attributes.
+convertTransform: false, # collapses multiple transformations and optimizes it.
+inlineStyles: false, # inline styles (additional options).
+mergePaths: false, # merges multiple paths in one if possible.
+minifyStyles: false, # minifies styles and removes unused styles based on usage data.
+moveElemsAttrsToGroup: false, # moves elements attributes to the existing group wrapper.
+moveGroupAttrsToElems: false, # moves some group attributes to the content elements.
+prefixIds: false, # prefix IDs.
+removeAttrs: false, # removes specified attributes.
+removeComments: false, # removes comments.
+removeDesc: false, # removes <desc>.
+removeDimensions: false, # removes width and height in presence of viewBox (opposite to removeViewBox, disable it first).
+removeDoctype: false, # removes doctype declaration.
+removeEditorsNSData: false, # removes editors namespaces, elements and attributes.
+removeElementsByAttr: false, # removes arbitrary elements by ID or className (disabled by default).
+removeEmptyAttrs: false, # removes empty attributes.
+removeEmptyContainers: false, # removes empty container elements.
+removeEmptyText: false, # removes empty <text> elements.
+removeHiddenElems: false, # removes hidden elements (zero sized, with absent attributes).
+removeMetadata: false, # removes <metadata>.
+removeNonInheritableGroupAttrs: false, # removes non-inheritable group’s presentational attributes.
+removeRasterImages: false, # removes raster images (disabled by default).
+removeScriptElement: false, # removes <script> elements (disabled by default).
+removeStyleElement: false, # removes <style> element (disabled by default).
+removeTitle: false, # removes <title>.
+removeUnknownsAndDefaults: false, # removes unknown elements content and attributes, removes attrs with default values.
+removeUnusedNS: false, # removes unused namespaces declaration.
+removeUselessDefs: false, # removes elements in <defs> without id.
+removeUselessStrokeAndFill: false, # removes useless stroke and fill attributes.
+removeViewBox: false, # removes viewBox attribute when possible.
+removeXMLNS: false, # removes xmlns attribute (for inline svg, disabled by default).
+removeXMLProcInst: false, # removes XML processing instructions.
+sortAttrs: false # sorts element attributes (disabled by default).
