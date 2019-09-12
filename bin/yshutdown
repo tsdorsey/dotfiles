@@ -1,0 +1,11 @@
+#!/bin/sh
+#
+# Get the reasons the computer shutdown over the last "period".
+
+if [ "$1" = "" ] ; then
+  period='24h'
+else
+  period=$1
+fi
+
+log show --predicate 'eventMessage contains "Previous shutdown cause"' --last $period
