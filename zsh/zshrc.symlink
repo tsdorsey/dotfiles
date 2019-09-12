@@ -59,3 +59,9 @@ export PATH="$HOME/.rvm/bin:$PATH" # Add RVM to PATH for scripting
 # tabtab source for sls package
 # uninstall by removing these lines or running `tabtab uninstall sls`
 [[ -f /Users/trevor/.nvm/versions/node/v6.10.2/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh ]] && . /Users/trevor/.nvm/versions/node/v6.10.2/lib/node_modules/serverless/node_modules/tabtab/.completions/sls.zsh
+
+# test -e "${HOME}/.iterm2_shell_integration.zsh" && source "${HOME}/.iterm2_shell_integration.zsh"
+
+# tabtab source for slss package
+# uninstall by removing these lines or running `tabtab uninstall slss`
+[[ -f /Users/trevor/projects/rebelgive/stacks/NucleusPlatformResources/node_modules/tabtab/.completions/slss.zsh ]] && . /Users/trevor/projects/rebelgive/stacks/NucleusPlatformResources/node_modules/tabtab/.completions/slss.zsh
