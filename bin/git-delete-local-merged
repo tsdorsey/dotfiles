@@ -5,4 +5,10 @@
 #
 #   https://plus.google.com/115587336092124934674/posts/dXsagsvLakJ
 
-git branch -d `git branch --merged | grep -v '^*' | grep -v 'master' | tr -d '\n'`
+branch="master";
+
+if [ "$1" != "" ]; then
+  branch=$1;
+fi
+
+git branch -d $(git branch --merged | grep -v '^*' | grep -v $branch | tr -d '\n');
