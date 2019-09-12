@@ -35,7 +35,7 @@
     'body': 'console.warn($1);'
   'Console error':
     'prefix': 'error'
-    'body': 'console.error($1);'
+    'body': 'console.error(${TM_SELECTED_TEXT});'
   'Import Module':
     'prefix': 'imp'
     'body': 'import $1 from \'$2\';'
@@ -44,9 +44,9 @@
     'body': "import _$1 from 'lodash/$1';"
   'Export Constant':
     'prefix': 'excon'
-    'body': "export const $1 = '$1';"
+    'body': "export const ${2:$1} = '$1';$3"
 
 '.text.html, .text.html .meta.scope.between-tag-pair, .text.html .punctuation.tag.begin':
   'paragraph':
     'prefix': 'p'
-    'body': '<p>$1</p>'
+    'body': '<p>$1</p>$2'

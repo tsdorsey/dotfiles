@@ -1,8 +1,16 @@
 "*":
   "atom-beautify":
+    executables:
+      "php-cs-fixer":
+        path: "/usr/local/bin/php-cs-fixer"
     general:
       _analyticsUserId: "798dbaa8-dc67-4fa3-aa15-738312108e7e"
+    php: {}
+    vue:
+      default_beautifier: "Prettier"
   "autocomplete-plus": {}
+  "bracket-matcher":
+    highlightMatchingLineNumber: true
   core:
     disabledPackages: [
       "background-tips"
@@ -38,11 +46,10 @@
       "open-recent"
       "open-this"
       "php-composer-completion"
-      "php-cs-fixer"
-      "php-fmt"
       "php-hyperclick"
       "serverless-dashboard"
       "show-origin"
+      "php-cs-fixer"
     ]
     hideGitIgnoredFiles: true
     ignoredNames: [
@@ -60,8 +67,8 @@
     ]
     telemetryConsent: "limited"
     themes: [
-      "solarized-light-ui"
-      "solarized-light-syntax"
+      "atom-solarized-dark-ui"
+      "solarized-dark-syntax"
     ]
   editor:
     backUpBeforeSaving: true
@@ -70,7 +77,7 @@
     invisibles: {}
     scrollPastEnd: true
     showIndentGuide: true
-    softWrapAtPreferredLineLength: false
+    softWrapAtPreferredLineLength: true
   emmet: {}
   "exception-reporting":
     userId: "da12a123-0b08-19c5-f3af-964885fa16c4"
@@ -80,11 +87,9 @@
   linter: {}
   "linter-eslint": {}
   "linter-ui-default":
-    showPanel: true
     useBusySignal: false
   "markdown-preview": {}
   minimap:
-    absoluteMode: true
     plugins:
       cursorline: true
       cursorlineDecorationsZIndex: 0
@@ -92,8 +97,17 @@
       "find-and-replaceDecorationsZIndex": 0
       "highlight-selected": true
       "highlight-selectedDecorationsZIndex": 0
+  "php-cs-fixer":
+    executablePath: "/usr/local/bin/php-cs-fixer"
+    executeOnSave: true
+    fixerArguments: [
+      "--using-cache=false"
+      "--no-interaction"
+      "--verbose"
+    ]
   "php-fmt":
-    noBackup: true
+    executablePath: "/Users/trevor/projects/php-fmt/fmt.phar"
+    phpExecutablePath: "/usr/local/Cellar/php@7.1/7.1.19/bin/php"
   pigments:
     autocompleteSuggestionsFromValue: true
     sassShadeAndTintImplementation: "bourbon"
@@ -103,9 +117,7 @@
       enabled: true
       showInStatusBar: true
     prettierOptions:
-      singleQuote: true
-      trailingComma: "es5"
-    printWidth: 100
+      singleQuote: false
   react: {}
   "release-notes":
     viewedVersion: "0.89.0"
