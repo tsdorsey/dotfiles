@@ -8,18 +8,16 @@
 if test ! $(which aws)
 then
   echo "  Installing AWS cli for you."
-  sudo -H pip install awscli --ignore-installed six
+  sudo -H pip3 install awscli --ignore-installed six
 else
-  sudo -H pip install --upgrade awscli --ignore-installed six
+  sudo -H pip3 install --upgrade awscli --ignore-installed six
 fi
 
 # Check for awscli
 if test ! $(which eb)
 then
   echo "  Installing AWS cli for you."
-  sudo -H pip install awsebcli --ignore-installed six
+  sudo -H pip3 install awsebcli --ignore-installed six
 else
-  sudo -H pip install --upgrade awsebcli --ignore-installed six
+  sudo -H pip3 install --upgrade awsebcli --ignore-installed six
 fi
-
-exit 0
