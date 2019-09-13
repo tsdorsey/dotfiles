@@ -22,6 +22,4 @@ then
 fi
 
 # Install homebrew packages
-brew install grc coreutils spark
-
-exit 0
+brew install grc coreutils spark nvm yarn
