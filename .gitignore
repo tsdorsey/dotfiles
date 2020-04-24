@@ -13,3 +13,5 @@ atom.symlink/git-time-machine
 atom.symlink/split-diff
 
 aws.symlink/credentials
+
+config.symlink/configstore
