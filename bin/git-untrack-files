@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Removes files from git but keeps them in the current working directory
+
+git rm --cached "$@"
