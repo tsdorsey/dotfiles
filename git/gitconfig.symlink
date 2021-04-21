@@ -23,6 +23,7 @@
   dt = difftool
   dtc = difftool --cached
   lg = log --graph --date=relative --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
+  lgd = log --graph --date=short --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ad%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
   lgb = log --date=relative --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
   pr = "!f() { git fetch -fu ${2:-origin} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
 [color]
