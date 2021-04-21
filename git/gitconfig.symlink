@@ -2,7 +2,10 @@
   protocol = git
 [user]
   name = Trevor Dorsey
-  email = tsdorsey@gmail.com
+  email = trevor@foyyay.com
+  signingkey = B38F2EAFBD4F5630
+[commit]
+  gpgsign = true
 [credential]
   helper = cache --timeout=3600
 [alias]
@@ -61,3 +64,5 @@
 [pager]
 	diff = diff-so-fancy | less --tabs=1,5 -RFX
 	show = diff-so-fancy | less --tabs=1,5 -RFX
+[gpg]
+	program = gpg
