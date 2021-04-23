@@ -1,0 +1,5 @@
+#!/bin/sh
+#
+# Creates a PR with some defaults using `gh`
+
+gh pr create -f
