@@ -1,0 +1,9 @@
+# Lines starting with # are comments
+
+# Always extract audio (and keep the video)
+-x -k
+
+# Save all videos under Movies directory in your home directory
+-o ~/Movies/youtube-dl/%(uploader)s-%(uploader_id)s/%(upload_date)s-%(title)s/%(id)s.%(ext)s
+# Make sure the filenames do not have special charcters.
+--restrict-filenames
