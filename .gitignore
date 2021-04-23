@@ -14,4 +14,4 @@ atom.symlink/split-diff
 
 aws.symlink/credentials
 
-config.symlink/configstore
+config.symlink
