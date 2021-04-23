@@ -47,8 +47,30 @@ defaults write com.apple.systemuiserver menuExtras -array \
 # Use Dark mode.
 defaults write -g AppleInterfaceStyle Dark
 
-# Set highlight color to green
-defaults write NSGlobalDomain AppleHighlightColor -string "0.764700 0.976500 0.568600"
+# AppleAccentColor
+# Delete for "multicolor"
+# -1 = Graphite
+#  0 = Red
+#  1 = Orange
+#  2 = Yellow
+#  3 = Green
+#  4 = Blue
+#  5 = Purple
+#  6 = Pink
+# Set accent color
+defaults write NSGlobalDomain AppleAccentColor -int 0
+
+# AppleHighlightColor
+# 0.847059 0.847059 0.862745 Graphite
+# 1.000000 0.733333 0.721569 Red
+# 1.000000 0.874510 0.701961 Orange
+# 1.000000 0.937255 0.690196 Yellow
+# 0.752941 0.964706 0.678431 Green
+#    [delete for default]    Blue
+# 0.968627 0.831373 1.000000 Purple
+# 1.000000 0.749020 0.823529 Pink
+# Set highlight color
+defaults write NSGlobalDomain AppleHighlightColor -string "1.000000 0.533333 0.521569 Other"
 
 # Set sidebar icon size to medium
 defaults write NSGlobalDomain NSTableViewDefaultSizeMode -int 2
