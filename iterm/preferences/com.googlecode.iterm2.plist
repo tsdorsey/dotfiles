@@ -2,16 +2,22 @@
 <!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
 <plist version="1.0">
 <dict>
+	<key>CheckTestRelease</key>
+	<true/>
 	<key>Default Bookmark Guid</key>
 	<string>F5206247-0467-468E-9884-974833407F9A</string>
 	<key>DeleteProfile_SilenceUntil</key>
 	<real>590096853.36880505</real>
 	<key>DeleteProfile_selection</key>
 	<integer>0</integer>
+	<key>EnableAPIServer</key>
+	<true/>
 	<key>HapticFeedbackForEsc</key>
 	<false/>
 	<key>HotkeyMigratedFromSingleToMulti</key>
 	<true/>
+	<key>IRMemory</key>
+	<integer>4</integer>
 	<key>New Bookmarks</key>
 	<array>
 		<dict>
