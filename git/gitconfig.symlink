@@ -16,6 +16,7 @@
   bl = branch --list
   co = checkout
   ca = commit --amend --no-edit
+  cf = commit --fixup
   cm = commit -m
   st = status -sb
   d  = diff
