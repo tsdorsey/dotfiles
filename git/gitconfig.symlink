@@ -15,8 +15,8 @@
   bfd = branch -D
   bl = branch --list
   co = checkout
-  cm = commit -m
   ca = commit --amend --no-edit
+  cm = commit -m
   st = status -sb
   d  = diff
   dc = diff --cached
