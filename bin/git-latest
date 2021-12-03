@@ -1,0 +1,27 @@
+#!/bin/sh
+#
+# Get master (or another branch you pass in) up to date and then end up back where you started.
+
+branch="master"
+if [ "$1" != "" ]; then
+  branch=$1
+fi
+
+currentStatus=$(git status -s)
+if [ -n "$currentStatus" ]; then
+  echo "There are uncommited changes. Stopping."
+  exit 1
+fi
+
+currentBranch=$(git branch --show-current)
+
+if [ "$branch" != "$currentBranch" ]; then
+  git co "$branch"
+fi
+
+git fetch -p
+git pull --ff-only
+
+if [ "$branch" != "$currentBranch" ]; then
+  git co "$currentBranch"
+fi
