@@ -72,3 +72,5 @@
 	ff = only
 [rebase]
   autosquash = true
+[advice]
+	skippedCherryPicks = false
