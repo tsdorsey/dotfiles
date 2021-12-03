@@ -2,26 +2,23 @@
 #
 # Get master (or another branch you pass in) up to date and then end up back where you started.
 
-branch="master"
+origin="origin"
+localBranch="master"
+remoteBranch="master"
+
 if [ "$1" != "" ]; then
-  branch=$1
+  remoteBranch=$1
+  localBranch=$1
 fi
 
-currentStatus=$(git status -s)
-if [ -n "$currentStatus" ]; then
-  echo "There are uncommited changes. Stopping."
-  exit 1
+if [ "$2" != "" ]; then
+  origin=$1
+  remoteBranch=$2
+  localBranch=$2
 fi
 
-currentBranch=$(git rev-parse --abbrev-ref HEAD)
-
-if [ "$branch" != "$currentBranch" ]; then
-  git co "$branch"
+if [ "$3" != "" ]; then
+  localBranch=$3
 fi
 
-git fetch -p
-git pull --ff-only
-
-if [ "$branch" != "$currentBranch" ]; then
-  git co "$currentBranch"
-fi
+git fetch -p "$origin" "$remoteBranch":"$localBranch"
