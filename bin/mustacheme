@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# mustacheme 
+# mustacheme
 #   expanded from an idea from Rick Olson (@technoweenie)
 #
 # Takes a .gif, splits it into constituent frames, mustaches each, restitches
@@ -33,8 +33,7 @@ output=/tmp/mustacheme
 rm -rf $output
 mkdir $output
 
-if [[ $1 == http* ]]
-then
+if [[ $1 == http* ]]; then
   wget $1 -O /tmp/mustache-download.gif
   file=/tmp/mustache-download.gif
 else
@@ -45,8 +44,7 @@ fi
 convert $1 -coalesce $output/frame_%03d.gif
 
 # Mustache each frame
-for frame in $output/*.gif
-do
+for frame in $output/*.gif; do
   url=$(cloudapp $frame | grep Uploaded | awk '{print substr($0, index($0, "http://"))}')
   url="$url/$(basename $frame)"
   wget "http://mustachify.me/?src=$url" -O "$frame-stache"

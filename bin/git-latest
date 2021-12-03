@@ -13,7 +13,7 @@ if [ -n "$currentStatus" ]; then
   exit 1
 fi
 
-currentBranch=$(git branch --show-current)
+currentBranch=$(git rev-parse --abbrev-ref HEAD)
 
 if [ "$branch" != "$currentBranch" ]; then
   git co "$branch"

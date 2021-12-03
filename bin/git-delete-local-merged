@@ -5,10 +5,9 @@
 #
 #   https://plus.google.com/115587336092124934674/posts/dXsagsvLakJ
 
-branch="master";
-
+branch="master"
 if [ "$1" != "" ]; then
-  branch=$1;
+  branch=$1
 fi
 
-git branch -d $(git branch --merged | grep -v '^*' | grep -v $branch | tr -d '\n');
+git branch -d $(git branch --merged | grep -v '^*' | grep -v $branch | tr -d '\n')

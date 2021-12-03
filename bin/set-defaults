@@ -2,4 +2,4 @@
 #
 # Sets OS X defaults by running $ZSHDOT/osx/set-defaults.sh.
 
-exec $ZSHDOT/osx/set-defaults.sh
+exec "$ZSHDOT"/osx/set-defaults.sh

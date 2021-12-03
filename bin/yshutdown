@@ -2,7 +2,7 @@
 #
 # Get the reasons the computer shutdown over the last "period".
 
-if [ "$1" = "" ] ; then
+if [ "$1" = "" ]; then
   period='24h'
 else
   period=$1
