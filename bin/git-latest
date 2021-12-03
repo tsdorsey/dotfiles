@@ -23,8 +23,9 @@ if [ "$3" != "" ]; then
 fi
 
 if [ "$currentBranch" != "$localBranch" ]; then
-  git fetch -p "$origin" "$remoteBranch":"$localBranch"
+  git fetch "$origin" "$remoteBranch":"$localBranch"
 else
   git pull
-  git fetch --prune
 fi
+
+git fetch --all --prune
