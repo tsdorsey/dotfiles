@@ -5,6 +5,7 @@
 origin="origin"
 localBranch="master"
 remoteBranch="master"
+currentBranch=$(git branch --show-current)
 
 if [ "$1" != "" ]; then
   remoteBranch=$1
@@ -21,4 +22,9 @@ if [ "$3" != "" ]; then
   localBranch=$3
 fi
 
-git fetch -p "$origin" "$remoteBranch":"$localBranch"
+if [ "$currentBranch" != "$localBranch" ]; then
+  git fetch -p "$origin" "$remoteBranch":"$localBranch"
+else
+  git pull
+  git fetch --prune
+fi
