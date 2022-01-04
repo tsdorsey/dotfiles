@@ -2,5 +2,6 @@
 *~
 *.swp
 *.tsdorsey
+*.tsdorsey.*
 .localrc
 .env
