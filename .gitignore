@@ -13,5 +13,6 @@ atom.symlink/git-time-machine
 atom.symlink/split-diff
 
 aws.symlink/credentials
+aws.symlink/cli/cache
 
 config.symlink

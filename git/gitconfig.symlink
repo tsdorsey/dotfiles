@@ -1,11 +1,13 @@
+[init]
+  defaultBranch = master
 [hub]
   protocol = git
 [user]
   name = Trevor Dorsey
   email = trevor@foyyay.com
-  signingkey = B38F2EAFBD4F5630
+  signingkey = 2A58E17A096DB169DF190BF7B14DA4B7C56F1326
 [commit]
-  gpgsign = false
+  gpgsign = true
 [credential]
   helper = cache --timeout=3600
 [alias]
@@ -25,12 +27,12 @@
   dt = difftool
   dtc = difftool --cached
   lg = log --graph --date=relative --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
+  lga = log --date=relative --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
+  lgb = log --graph --date=relative --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)' --ancestry-path
   lgd = log --graph --date=short --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ad%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
-  lgb = log --date=relative --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
-  pr = "!f() { git fetch -fu ${2:-origin} refs/pull/$1/head:pr/$1 && git checkout pr/$1; }; f"
-  stp = stash push --include-untracked
+  sts = stash save --include-untracked
   sta = stash apply
-  sts = stash show
+  stsh = stash show
 [color]
   diff = auto
   status = auto
@@ -52,6 +54,7 @@
   autocorrect = 0
 [push]
   default = current
+  autoSetupRemote = true
 [diff]
   tool = diffmerge
 [difftool "diffmerge"]
@@ -73,10 +76,11 @@
 [gpg]
 	program = gpg
 [pull]
-	ff = only
+	rebase = true
 [rebase]
   autosquash = true
 [advice]
 	skippedCherryPicks = false
+  addIgnoredFile = false
 [stash]
   showIncludeUntracked = true

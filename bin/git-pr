@@ -2,4 +2,4 @@
 #
 # Creates a PR with some defaults using `gh`
 
-gh pr create --fill --assignee @me
+gh pr create --assignee @me --web

@@ -1,0 +1,10 @@
+#!/bin/sh
+
+repoFolder=$1
+if [ "$repoFolder" != "" ]; then
+  cd "$repoFolder" || exit 1
+fi
+
+echo pwd
+find "$(pwd)" -type d -print0 | xargs -0 chmod 755
+find "$(pwd)" -type f -print0 | xargs -0 chmod 644

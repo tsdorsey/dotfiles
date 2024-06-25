@@ -2,36 +2,19 @@
 region=us-east-1
 output=json
 
-[profile tsdorsey]
+[tsdorsey]
 region=us-west-2
 
-[profile foyyay]
-region=us-west-2
+[foyyay]
+region=us-east-1
+output=json
 s3=
   use_accelerate_endpoint=true
 
-[profile storytape_dev]
-region=us-east-1
-
-[profile storytape_prod]
-region=us-east-1
-
-[profile nucleus_developer]
+[ncuroot]
 region=us-east-1
 output=json
 
-[profile nucleus_development]
-region=us-east-1
-output=json
-
-[profile nucleus_staging]
-region=us-east-1
-output=json
-
-[profile rebelpay_developer]
-region=us-east-1
-output=json
-
-[profile rebelpay_development]
+[commonwealth_development]
 region=us-east-1
 output=json

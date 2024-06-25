@@ -7,10 +7,10 @@
 export ZSHDOT="$HOME"/.dotfiles
 
 # Set OS X defaults
-"$ZSHDOT"/macos/set-defaults.sh
+# "$ZSHDOT"/macos/set-defaults.sh
 
 # Install homebrew packages
-"$ZSHDOT"/homebrew/install.sh 2>&1
+"$ZSHDOT"/homebrew/installer.sh 2>&1
 
 # Upgrade homebrew (after installing it).
 brew update

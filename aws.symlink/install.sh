@@ -5,8 +5,7 @@
 # This will install/upgrade the AWS CLI.
 
 # Check for awscli
-if test ! $(which aws)
-then
+if test ! "$(which aws)"; then
   echo "  Installing AWS cli for you."
   sudo -H pip3 install awscli --ignore-installed six
 else
@@ -14,8 +13,7 @@ else
 fi
 
 # Check for awscli
-if test ! $(which eb)
-then
+if test ! "$(which eb)"; then
   echo "  Installing AWS cli for you."
   sudo -H pip3 install awsebcli --ignore-installed six
 else
