@@ -18,3 +18,7 @@ output=json
 [commonwealth_development]
 region=us-east-1
 output=json
+
+[caff_development]
+region=us-east-1
+output=json
