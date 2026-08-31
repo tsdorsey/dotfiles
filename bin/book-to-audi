@@ -1,0 +1,205 @@
+#!/bin/bash
+
+# Recursive file sync script
+# Syncs files from current directory to specified destination
+# Processes files one at a time in alphabetical order
+
+set -euo pipefail  # Exit on error, undefined vars, pipe failures
+
+# Colors for output
+RED='\033[0;31m'
+GREEN='\033[0;32m'
+YELLOW='\033[1;33m'
+BLUE='\033[0;34m'
+NC='\033[0m' # No Color
+
+# Function to print colored output
+print_status() {
+    local color=$1
+    local message=$2
+    echo -e "${color}${message}${NC}"
+}
+
+# Function to show usage
+show_usage() {
+    echo "Usage: $0 <destination_path> [options]"
+    echo ""
+    echo "Options:"
+    echo "  -d, --dry-run     Show what would be synced without actually syncing"
+    echo "  -v, --verbose      Show detailed output"
+    echo "  -h, --help         Show this help message"
+    echo ""
+    echo "Examples:"
+    echo "  $0 /path/to/destination"
+    echo "  $0 /path/to/destination --dry-run"
+    echo "  $0 /path/to/destination --verbose"
+}
+
+# Function to sync a single file
+sync_file() {
+    local source_file="$1"
+    local dest_path="$2"
+    local dry_run="$3"
+    local verbose="$4"
+
+    # Get relative path from current directory
+    local relative_path="${source_file#./}"
+
+    # Create destination path
+    local dest_file="${dest_path}/${relative_path}"
+    local dest_dir=$(dirname "$dest_file")
+
+    if [[ "$dry_run" == "true" ]]; then
+        print_status "$BLUE" "Would sync: $relative_path -> $dest_file"
+        return 0
+    fi
+
+    # Create destination directory if it doesn't exist
+    if [[ ! -d "$dest_dir" ]]; then
+        if [[ "$verbose" == "true" ]]; then
+            print_status "$YELLOW" "Creating directory: $dest_dir"
+        fi
+        mkdir -p "$dest_dir"
+    fi
+
+    # Check if file needs to be synced
+    if [[ -f "$dest_file" ]]; then
+        # Compare files
+        if cmp -s "$source_file" "$dest_file"; then
+            if [[ "$verbose" == "true" ]]; then
+                print_status "$GREEN" "File up to date: $relative_path"
+            fi
+            return 0
+        else
+            if [[ "$verbose" == "true" ]]; then
+                print_status "$YELLOW" "File differs, syncing: $relative_path"
+            fi
+        fi
+    else
+        if [[ "$verbose" == "true" ]]; then
+            print_status "$YELLOW" "New file, syncing: $relative_path"
+        fi
+    fi
+
+    # Sync the file using rsync
+    if rsync -a "$source_file" "$dest_file" 2>/dev/null; then
+        print_status "$GREEN" "Synced: $relative_path"
+    else
+        print_status "$RED" "Failed to sync: $relative_path"
+        return 1
+    fi
+}
+
+# Parse command line arguments
+DEST_PATH=""
+DRY_RUN=false
+VERBOSE=false
+
+while [[ $# -gt 0 ]]; do
+    case $1 in
+        -d|--dry-run)
+            DRY_RUN=true
+            shift
+            ;;
+        -v|--verbose)
+            VERBOSE=true
+            shift
+            ;;
+        -h|--help)
+            show_usage
+            exit 0
+            ;;
+        -*)
+            print_status "$RED" "Unknown option: $1"
+            show_usage
+            exit 1
+            ;;
+        *)
+            if [[ -z "$DEST_PATH" ]]; then
+                DEST_PATH="$1"
+            else
+                print_status "$RED" "Multiple destination paths specified"
+                show_usage
+                exit 1
+            fi
+            shift
+            ;;
+    esac
+done
+
+# Check if destination path is provided
+if [[ -z "$DEST_PATH" ]]; then
+    print_status "$RED" "Error: Destination path is required"
+    show_usage
+    exit 1
+fi
+
+# Check if destination path is valid
+if [[ ! -d "$(dirname "$DEST_PATH")" ]]; then
+    print_status "$RED" "Error: Parent directory of destination does not exist: $(dirname "$DEST_PATH")"
+    exit 1
+fi
+
+# Create destination directory if it doesn't exist
+if [[ ! -d "$DEST_PATH" ]]; then
+    if [[ "$DRY_RUN" == "true" ]]; then
+        print_status "$BLUE" "Would create destination directory: $DEST_PATH"
+    else
+        print_status "$YELLOW" "Creating destination directory: $DEST_PATH"
+        mkdir -p "$DEST_PATH"
+    fi
+fi
+
+# Get current directory
+CURRENT_DIR=$(pwd)
+print_status "$BLUE" "Source directory: $CURRENT_DIR"
+print_status "$BLUE" "Destination: $DEST_PATH"
+
+if [[ "$DRY_RUN" == "true" ]]; then
+    print_status "$YELLOW" "DRY RUN MODE - No files will be actually synced"
+fi
+
+# Counter for statistics
+TOTAL_FILES=0
+SYNCED_FILES=0
+FAILED_FILES=0
+
+# Find all files in current directory recursively, sorted alphabetically
+# Exclude the destination directory if it's a subdirectory
+if [[ "$DEST_PATH" == "$CURRENT_DIR"/* ]]; then
+    # Destination is a subdirectory, exclude it
+    EXCLUDE_PATTERN="-path '$DEST_PATH' -prune -o"
+else
+    EXCLUDE_PATTERN=""
+fi
+
+# Use find to get files in alphabetical order
+while IFS= read -r -d '' file; do
+    TOTAL_FILES=$((TOTAL_FILES + 1))
+
+    if sync_file "$file" "$DEST_PATH" "$DRY_RUN" "$VERBOSE"; then
+        SYNCED_FILES=$((SYNCED_FILES + 1))
+    else
+        FAILED_FILES=$((FAILED_FILES + 1))
+    fi
+done < <(find . -type f $EXCLUDE_PATTERN -print0 | sort -z)
+
+# Print summary
+echo ""
+print_status "$BLUE" "=== Sync Summary ==="
+print_status "$BLUE" "Total files found: $TOTAL_FILES"
+if [[ "$DRY_RUN" == "true" ]]; then
+    print_status "$BLUE" "Files that would be synced: $SYNCED_FILES"
+else
+    print_status "$GREEN" "Files successfully synced: $SYNCED_FILES"
+    if [[ $FAILED_FILES -gt 0 ]]; then
+        print_status "$RED" "Files failed to sync: $FAILED_FILES"
+    fi
+fi
+
+if [[ $FAILED_FILES -gt 0 ]]; then
+    exit 1
+else
+    exit 0
+fi
+

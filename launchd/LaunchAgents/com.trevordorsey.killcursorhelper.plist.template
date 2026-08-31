@@ -1,0 +1,32 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE plist PUBLIC "-//Apple//DTD PLIST 1.0//EN" "http://www.apple.com/DTDs/PropertyList-1.0.dtd">
+<plist version="1.0">
+<dict>
+    <key>Label</key>
+    <string>Close orphaned Cursor Helpers</string>
+    <key>ProgramArguments</key>
+    <array>
+        <string>__HOME__/.dotfiles/bin/kill-orphan-process</string>
+        <string>--verbose</string>
+        <string>Cursor Helper</string>
+    </array>
+
+    <key>RunAtLoad</key>
+    <true/>
+    <key>StartInterval</key>
+    <integer>900</integer>  <!-- 15 minutes -->
+
+    <key>WorkingDirectory</key>
+    <string>__HOME__</string>
+    <key>StandardOutPath</key>
+    <string>__HOME__/logs/kill-orphan-process.log</string>
+    <key>StandardErrorPath</key>
+    <string>__HOME__/logs/kill-orphan-process.log</string>
+
+    <!-- Optional: Limit resource usage -->
+    <key>ProcessType</key>
+    <string>Adaptive</string>
+    <key>ThrottleInterval</key>
+    <integer>60</integer>
+</dict>
+</plist>

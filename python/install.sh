@@ -1,3 +1,4 @@
 #!/bin/sh
 #
-brew install python@2
+brew install pyenv
+

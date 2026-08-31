@@ -1,0 +1,12 @@
+#!/bin/sh
+#
+# Rebases the current branch onto master (or another branch you pass in).
+
+otherBranch="master"
+
+if [ "$1" != "" ]; then
+  otherBranch=$1
+fi
+
+
+git rebase -i "$otherBranch"

@@ -1,0 +1,49 @@
+#!/bin/bash
+# =============================================================================
+# git-stage-lines — FINAL WORKING VERSION
+# =============================================================================
+
+FILE="$1"
+MAXLINE="$2"
+
+if [[ -z "$FILE" || -z "$MAXLINE" || "$MAXLINE" -le 0 ]]; then
+  echo "Usage: $0 <file> <max_line>" >&2
+  exit 1
+fi
+
+GIT_EXTERNAL_DIFF= git --no-pager diff -U0 --no-color --no-ext-diff -- "$FILE" | \
+  awk -v max="$MAXLINE" '
+    BEGIN { 
+      printing = 1 
+      header_printed = 0
+    }
+
+    # Print the entire header (everything before first hunk)
+    !/^@@/ && !header_printed {
+      print
+      if (/^\+\+\+ /) header_printed = 1
+      next
+    }
+
+    # Hunk header
+    /^@@ -[0-9]+/ {
+      # Extract start line
+      line = $0
+      gsub(/^@@ -/, "", line)
+      gsub(/[^0-9].*$/, "", line)
+      start = line + 0
+
+      if (start > max) {
+        exit   # stop completely
+      } else {
+        printing = 1
+        print   # print this hunk header
+        next
+      }
+    }
+
+    printing { print }
+  ' | \
+  git apply --cached --ignore-whitespace --unidiff-zero 2>/dev/null && \
+  echo "✅ Staged changes up to line $MAXLINE in $FILE" || \
+  echo "No changes in the first $MAXLINE lines (or already staged)."

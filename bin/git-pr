@@ -1,5 +1,9 @@
 #!/bin/sh
 #
-# Creates a PR with some defaults using `gh`
+# Opens a PR compare url in the browser
 
-gh pr create --assignee @me --web
+repo=$(git remote get-url origin | sed -E 's/^(git@github\.com:|https:\/\/github\.com\/)([^/]+\/[^/.]+)(\.git)?$/\2/');
+branch=$(git branch --show-current 2>/dev/null || git rev-parse --abbrev-ref HEAD);
+ghUsername=$(git config --get user.github);
+open "https://github.com/$repo/compare/$branch?expand=1&quick_pull=1&assignees=$ghUsername";
+

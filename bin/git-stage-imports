@@ -1,0 +1,51 @@
+#!/bin/bash
+# =============================================================================
+# git-stage-imports
+# 
+# Stages ONLY the import/require section of every modified JS/TS file.
+# Uses your existing git-import-boundary and git-stage-lines commands.
+# 
+# Perfect for TypeScript + AWS projects — keeps import changes atomic
+# before committing business logic, Lambda handlers, ECS services, etc.
+# =============================================================================
+
+set -euo pipefail
+
+echo "🔍 Scanning for modified TypeScript/JavaScript files..."
+
+# Get all files with changes in the working tree (modified + new)
+MODIFIED_FILES=$(git diff --name-only --diff-filter=AM \
+    | grep -E '\.(ts|tsx|js|jsx)$' || true)
+
+if [[ -z "$MODIFIED_FILES" ]]; then
+  echo "✅ No modified .ts/.tsx/.js/.jsx files found."
+  exit 0
+fi
+
+STAGED_COUNT=0
+
+while IFS= read -r FILE; do
+  if [[ ! -f "$FILE" ]]; then
+    continue
+  fi
+
+  # Get last import/require line
+  LAST_IMPORT_LINE=$(git-import-boundary "$FILE" 2>/dev/null || echo "0")
+
+  if [[ "$LAST_IMPORT_LINE" -gt 0 ]]; then
+    echo "📦 Staging imports (lines 1-$LAST_IMPORT_LINE) → $FILE"
+    
+    # Call your existing git-stage-lines command
+    if git-stage-lines "$FILE" "$LAST_IMPORT_LINE"; then
+      ((STAGED_COUNT++))
+    else
+      echo "⚠️  Failed to stage imports for $FILE" >&2
+    fi
+  else
+    echo "ℹ️  No imports found in $FILE — skipping"
+  fi
+done <<< "$MODIFIED_FILES"
+
+echo "========================================"
+echo "✅ Successfully staged import sections in $STAGED_COUNT file(s)."
+echo "Run 'git status' or 'git diff --cached' to review."

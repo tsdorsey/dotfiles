@@ -1,0 +1,1 @@
+alias nx='npx nx'

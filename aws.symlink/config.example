@@ -1,0 +1,25 @@
+[default]
+region=us-east-1
+output=json
+
+[profile tsdorsey]
+region=us-west-2
+output=json
+
+[profile foyyay]
+region=us-east-1
+output=json
+s3=
+  use_accelerate_endpoint=true
+
+# Work / assume-role profiles stay in ~/.aws/config (this file, on disk), not in git.
+# install.sh copies this example to config if config is missing. Then add profiles like:
+#
+# [profile work_root]
+# credential_process = sh -c "~/.aws/op-aws-credential-helper.sh 'Vault' 'Item Name'"
+#
+# [profile work_development]
+# source_profile = work_root
+# role_arn = arn:aws:iam::123456789012:role/ExampleRole
+# region=us-east-1
+# output=json

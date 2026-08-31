@@ -4,18 +4,17 @@
 #
 # This will install/upgrade the AWS CLI.
 
-# Check for awscli
-if test ! "$(which aws)"; then
-  echo "  Installing AWS cli for you."
-  sudo -H pip3 install awscli --ignore-installed six
-else
-  sudo -H pip3 install --upgrade awscli --ignore-installed six
+# script/install sources this from the repo root.
+if [ ! -f aws.symlink/config ]; then
+  echo "  Creating aws.symlink/config from example."
+  cp aws.symlink/config.example aws.symlink/config
 fi
 
 # Check for awscli
-if test ! "$(which eb)"; then
+if test ! "$(which aws)"; then
   echo "  Installing AWS cli for you."
-  sudo -H pip3 install awsebcli --ignore-installed six
+  brew install awscli
 else
-  sudo -H pip3 install --upgrade awsebcli --ignore-installed six
+  brew upgrade awscli
 fi
+
