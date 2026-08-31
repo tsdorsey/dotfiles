@@ -1,0 +1,25 @@
+[cli]
+installer = "internal"
+
+[marketplace]
+official_marketplace_auto_installed = true
+
+[[marketplace.sources]]
+git = "https://github.com/xai-org/plugin-marketplace.git"
+name = "xAI Official"
+
+[models]
+default = "grok-build"
+
+[ui]
+compact_mode = false
+fork_secondary_model = "grok-build"
+max_thoughts_width = 120
+permission_mode = "always-approve"
+yolo = false
+
+[telemetry]
+trace_upload = false
+
+[features]
+telemetry = false
