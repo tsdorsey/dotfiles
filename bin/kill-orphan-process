@@ -1,0 +1,68 @@
+#!/bin/bash
+# kill-orphan-process.sh - Kill processes matching a filter whose PPID no longer exists
+# Usage: ./kill-orphan-process.sh "cursor|code" [--dry-run] [--signal TERM|KILL] [--verbose]
+
+set -euo pipefail
+
+FILTER="${1:-}"
+DRY_RUN=false
+SIGNAL="TERM"
+VERBOSE=false
+
+# Parse options
+while [[ $# -gt 0 ]]; do
+  case $1 in
+    --dry-run) DRY_RUN=true; shift ;;
+    --signal) SIGNAL="$2"; shift 2 ;;
+    --verbose) VERBOSE=true; shift ;;
+    *) FILTER="$1"; shift ;;
+  esac
+done
+
+if [[ -z "$FILTER" ]]; then
+  echo "Usage: $0 <filter-pattern> [--dry-run] [--signal TERM|KILL] [--verbose]" >&2
+  echo "Example: $0 'Cursor|code-helper'" >&2
+  exit 1
+fi
+
+echo "🔍 Searching for processes matching: '$FILTER'..."
+
+# Get candidate PIDs: filter by command, exclude this script and grep itself
+CANDIDATES=$(ps -eo pid,ppid,comm,args | 
+  grep -E "$FILTER" | 
+  grep -vE "grep|kill-orphan-process" | 
+  awk '{print $1 ":" $2}')
+
+if [[ -z "$CANDIDATES" ]]; then
+  echo "✅ No matching processes found."
+  exit 0
+fi
+
+KILLED=0
+for entry in $CANDIDATES; do
+  PID=$(echo "$entry" | cut -d':' -f1)
+  PARENT_PID=$(echo "$entry" | cut -d':' -f2)
+  
+  # Check if PARENT_PID still exists (kill -0 tests without sending signal)
+  if ! kill -0 "$PARENT_PID" 2>/dev/null; then
+    PROC_NAME=$(ps -o comm= -p "$PID" 2>/dev/null || echo "unknown")
+    
+    if [[ "$DRY_RUN" == true ]]; then
+      echo "🧪 [DRY-RUN] Would kill PID $PID ($PROC_NAME) - orphaned (PPID $PARENT_PID gone)"
+    else
+      if kill -s "$SIGNAL" "$PID" 2>/dev/null; then
+        echo "🛑 Killed PID $PID ($PROC_NAME) - orphaned parent"
+        ((KILLED++))
+      else
+        echo "⚠️  Failed to kill PID $PID (may need sudo or stronger signal)"
+      fi
+    fi
+  elif [[ "$VERBOSE" == true ]]; then
+    echo "⏭️  Skipping PID $PID - parent $PARENT_PID still alive"
+  fi
+done
+
+echo "✅ Done. $KILLED process(es) terminated."
+
+
+ps -eo pid,ppid,comm,args | grep -E "Cursor Helper" | grep -vE "grep|kill-orphan-process" | awk '{print $1 ":" $2}'
