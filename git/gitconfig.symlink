@@ -3,9 +3,10 @@
 [hub]
   protocol = git
 [user]
+  github = tsdorsey
   name = Trevor Dorsey
   email = trevor@foyyay.com
-  signingkey = 2A58E17A096DB169DF190BF7B14DA4B7C56F1326
+  signingkey = ssh-rsa AAAAB3NzaC1yc2EAAAADAQABAAACAQDAaH9U0m1xOhZIX1iLVgAyhYRsSaUKEhq7o8UGrrdSnBsIbToeMq8xnqBNwgXZNNFFE8LBmInNbgsaPckm8Qm6ktt3hCJVmg61ULo8P7cH1eG5Y/WQr9zpbkSdlBGhxJGMChQiE+VPxsT9FRq2nXjr2wf0JwUVqb6J1LgR7VQfBe85MR+axzh4AtrumTrg3koDe3L2uqi0+O3gglAeMs301FqGi7CR9l+8h3c1ggW8sRkpN4NzEi5shI7He/9ff1dSu1t6D6NgQWhUJvJBNZyUAm8VDR2QneZ79CYqtFC7uIgjKWG8nUKaTWfJ2niOZGmTm9X/8mCbfQ0VtlGtkywxoHOS6hHv+etDIkvKqKuBo3OfzgRztI7wak9I1mYSYtcYVOKvV+y7Toq7WAP00CqGDfrCbuH2wCYlAbkcetZILg5AokVnfBbPM8sZiPLt6JWVsx7L6uQMej28YYSIv/QloIgqrL0WC9Rs8qw6xjUMgibvwiZxuRi1DtlWqH/K2rDmrsudkASPIAQ0edRBD4jnWwfQVBi0yxONmGNGQoy2plXp183e2B/rqfpsg/YFXcAIFx3Fm606yXCJfKiDLzosGM6qM7BIKUuer2vWrh2OkamSiANcfrjbGDaEVvw8ocu3Rwy8lNPh76ejkJWPE5gpFC5xYKirjm4WoVy7l+G/qQ==
 [commit]
   gpgsign = true
 [credential]
@@ -30,9 +31,8 @@
   lga = log --date=relative --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
   lgb = log --graph --date=relative --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)' --ancestry-path
   lgd = log --graph --date=short --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ad%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
-  sts = stash save --include-untracked
-  sta = stash apply
-  stsh = stash show
+  rbc = rebase --continue
+  rbm = rebase master
 [color]
   diff = auto
   status = auto
@@ -40,8 +40,9 @@
   ui = true
 [core]
   excludesfile = ~/.gitignore
-	editor = code --wait
+  editor = cursor --wait
   ignorecase = false
+  pager = less -FRX
 [apply]
   whitespace = nowarn
 [mergetool]
@@ -59,6 +60,8 @@
   tool = diffmerge
 [difftool "diffmerge"]
   cmd = diffmerge "$LOCAL" "$REMOTE"
+[difftool "sem"]
+  cmd = sem diff --color "$LOCAL" "$REMOTE"
 [merge]
   tool = diffmerge
   keepbackups = false
@@ -74,11 +77,14 @@
 	diff = diff-so-fancy | less --tabs=1,5 -RFX
 	show = diff-so-fancy | less --tabs=1,5 -RFX
 [gpg]
-	program = gpg
+  format = ssh
+[gpg "ssh"]
+  program = "/Applications/1Password.app/Contents/MacOS/op-ssh-sign"
+  allowedSignersFile = ~/.ssh/allowed_signers
 [pull]
 	rebase = true
 [rebase]
-  autosquash = true
+	autosquash = true
 [advice]
 	skippedCherryPicks = false
   addIgnoredFile = false
