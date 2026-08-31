@@ -26,37 +26,61 @@
 #   Genre: Audiobooks
 
 #initial track number
-track=1
+trackNumber=1
+
 
 #assumes ( if there are multiple files Part 01/Part 02) that they are in alphabetical order
-for i in *.m4b; do
-  name=$(echo $i | cut -d'.' -f1)
-  echo $name
-  ffmpeg -i "$i" -acodec libmp3lame -ar 22050 -ab 64k "$name.mp3"
-  full_file_path="$name.mp3"
+for bookFilepath in *.m4b; do
+  title=$(echo "$bookFilepath" | cut -d'.' -f1)
+  title=${title//\[*\]/} # Remove everything in square brackets
+  title=${title//:/ -}  # Replace colons with " -"
+  title=${title# }  # Remove leading space
+  title=${title% }  # Remove trailing space
 
-  #split chapters
-  title=$(pwd | sed 's,^\(.*/\)\?\([^/]*\),\2,' | cut -d , -f 1)
+  echo "title: $title"
 
-  ffmpeg -i "$full_file_path" 2>tmp.txt
+  # Subfolder for chapters
+  subfolder="$(pwd)/$title"
+  fullMP3Filepath="$subfolder/$title.mp3"
+  chapterDataFilepath="$subfolder/tmp.txt"
+  mkdir -p "$subfolder"
+
+  # Only convert if the output file doesn't exist
+  if [[ ! -f "$fullMP3Filepath" ]]; then
+    echo "Converting $bookFilepath to $fullMP3Filepath..."
+    ffmpeg -i "$bookFilepath" -acodec libmp3lame -ar 44100 -ab 128k "$fullMP3Filepath"
+  else
+    echo "File $fullMP3Filepath already exists, skipping conversion"
+  fi
+
+  ffmpeg -i "$fullMP3Filepath" 2> "$chapterDataFilepath"
 
   while read -r first _ _ start _ end; do
-    if [[ "${first}" = "Chapter" ]]; then
-      read # discard line with Metadata:
-      read _ _ chapter
-      chapter=$(sed -re ":r;s/\b[0-9]{1,$((1))}\b/0&/g;tr" <<<$chapter)
-      chapter_file="${title} - ${chapter}.mp3"
-      echo "processing $chapter"
-      ffmpeg </dev/null -loglevel error -stats -i "${full_file_path}" -ss "${start%?}" -to "${end}" -codec:a copy -metadata track="${chapter}" "${chapter_file}"
-      id3v2 --song "$chapter" "$chapter_file"
-      id3v2 --album "$title" "$chapter_file"
-      id3v2 --track "$track" "$chapter_file"
-      echo "$title - $chapter"
-      track=$((track + 1))
+    if [[ "${first}" != "Chapter" ]]; then
+      continue;
     fi
-  done <tmp.txt
 
-  rm tmp.txt
-  rm "$full_file_path"
+    read # discard line with Metadata:
+    read _ _ chapter
+    chapter=$(sed -re ":r;s/\b[0-9]{1,$((1))}\b/0&/g;tr" <<<$chapter)
+    chapter=${chapter//:/ -}  # Replace colons with " -"
+    chapter_file="${subfolder}/$(printf "%02d" $trackNumber) - ${title} - ${chapter}.mp3"
+    echo "chapter_file: $chapter_file"
+    if [[ ! -f "$chapter_file" ]]; then
+      echo "processing $chapter"
+      ffmpeg </dev/null -loglevel error -stats -i "${fullMP3Filepath}" -ss "${start%?}" -to "${end}" -codec:a copy -metadata track="${chapter}" "${chapter_file}"
+    else
+      echo "skipping existing $chapter"
+    fi
+    id3v2 --artist "Andrew Peterson" --year 2020 --track "$trackNumber" --album "$title" --song "$chapter" --genre 183 "$chapter_file"
+    echo "$title - $chapter"
+    trackNumber=$((trackNumber + 1))
+  done <"$chapterDataFilepath"
 
+  read -p "Remove temporary files? (y/N): " -n 1 -r
+  echo
+  if [[ $REPLY =~ ^[Yy]$ ]]; then
+    rm "$chapterDataFilepath"
+    rm "$fullMP3Filepath"
+  fi
 done
