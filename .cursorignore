@@ -1,0 +1,17 @@
+aws.symlink/credentials
+aws.symlink/cli/cache
+aws.symlink/config
+
+# ~/.config dump — logs, sessions, tokens
+config.symlink/*
+!config.symlink/herdr/
+config.symlink/herdr/*
+!config.symlink/herdr/config.toml
+!config.symlink/gh/
+config.symlink/gh/*
+!config.symlink/gh/config.yml
+
+# ~/.grok app data
+grok.symlink/*
+!grok.symlink/config.toml
+!grok.symlink/grok.zsh

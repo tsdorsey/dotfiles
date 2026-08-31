@@ -12,8 +12,33 @@ atom.symlink/themes
 atom.symlink/git-time-machine
 atom.symlink/split-diff
 
+# OS / editor junk
+.DS_Store
+.vscode/
+
+# Machine-generated
+fonts.symlink/.uuid
+
+# Vendor-generated iTerm script (installs itself into ~)
+iterm/iterm2_shell_integration.zsh
+
+# Full iTerm preference dump; color schemes and default_profile.json are enough
+iterm/preferences/com.googlecode.iterm2.plist
+
 aws.symlink/credentials
 aws.symlink/cli/cache
 aws.symlink/config
 
-config.symlink
+# ~/.config is an app-data dump: caches, logs, sessions, tokens
+config.symlink/*
+!config.symlink/herdr/
+config.symlink/herdr/*
+!config.symlink/herdr/config.toml
+!config.symlink/gh/
+config.symlink/gh/*
+!config.symlink/gh/config.yml
+
+# ~/.grok is the same: auth.json, sessions, logs, caches, DBs
+grok.symlink/*
+!grok.symlink/config.toml
+!grok.symlink/grok.zsh
