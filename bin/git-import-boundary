@@ -1,0 +1,62 @@
+#!/bin/bash
+# =============================================================================
+# git-import-boundary (macOS-friendly)
+# 
+# Returns the line number of the last import/require before the first
+# non-import content that appears after a blank line.
+# Fully portable — no GNU awk extensions.
+# =============================================================================
+
+if [[ $# -eq 0 ]]; then
+  echo "Usage: $0 <file.ts|file.js>" >&2
+  exit 1
+fi
+
+FILE="$1"
+
+if [[ ! -f "$FILE" ]]; then
+  echo "Error: File not found: $FILE" >&2
+  exit 1
+fi
+
+awk '
+  BEGIN {
+    last_import = 0
+    saw_blank = 0
+  }
+
+  {
+    # Remove leading and trailing whitespace for checking blank lines
+    trimmed = $0
+    gsub(/^[ \t]+/, "", trimmed)
+    gsub(/[ \t]+$/, "", trimmed)
+
+    # Blank line
+    if (trimmed == "") {
+      saw_blank = 1
+      next
+    }
+
+    # Line starts with import or require (after optional whitespace)
+    if ($0 ~ /^[ \t]*(import|require|import\s*\()/) {
+      last_import = NR
+      saw_blank = 0
+      next
+    }
+
+    # We hit real code after a blank line → boundary found
+    if (last_import > 0 && saw_blank == 1) {
+      print last_import
+      exit
+    }
+
+    # Reset blank flag for other content
+    saw_blank = 0
+  }
+
+  END {
+    if(saw_blank == 0) {
+      print (last_import > 0 ? last_import : 0)
+    }
+  }
+' "$FILE"

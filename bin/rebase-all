@@ -1,0 +1,111 @@
+#!/bin/zsh
+# git-rebase-branches.sh — Hardened rebase with persistent divergence tracking
+
+set -uo pipefail
+
+MASTER_BRANCH="master"
+
+RED="\033[31m"
+ORANGE="\033[38;5;214m"
+GREEN="\033[32m"
+CYAN="\033[36m"
+RESET="\033[0m"
+
+TRACKING_FILE=".rebase-all.tsdorsey"
+current_branch=$(git branch --show-current 2>/dev/null || echo "detached")
+
+# Function to force clean Git state
+clean_git_state() {
+  if git rev-parse --verify HEAD >/dev/null 2>&1; then
+    if [[ -d .git/rebase-merge || -d .git/rebase-apply ]]; then
+      git rebase --abort >/dev/null 2>&1 || true
+    fi
+    if [[ -f .git/MERGE_HEAD ]]; then
+      git merge --abort >/dev/null 2>&1 || true
+    fi
+    git reset --hard HEAD >/dev/null 2>&1 || true
+    git clean -fd >/dev/null 2>&1 || true
+  fi
+}
+
+# Load previous tracking data safely
+declare -A prev_ahead prev_behind
+if [[ -f "$TRACKING_FILE" ]]; then
+  while IFS='|' read -r prev_branch ahead behind || [[ -n "$prev_branch" ]]; do
+    [[ -z "$prev_branch" ]] && continue
+    prev_ahead["$prev_branch"]="${ahead:-0}"
+    prev_behind["$prev_branch"]="${behind:-0}"
+  done < "$TRACKING_FILE"
+fi
+
+echo "${GREEN}Initiating tracked rebase sweep onto ${MASTER_BRANCH}...${RESET}"
+echo "Originating branch: ${ORANGE}${current_branch}${RESET}\n"
+
+clean_git_state
+
+# Prepare new tracking content
+touch "$TRACKING_FILE.new"   # Temporary file for atomic write
+
+git for-each-ref --format='%(refname:short)' refs/heads/ | while read -r branch; do
+  if [[ "$branch" == "$MASTER_BRANCH" || "$branch" == "$current_branch" ]]; then
+    printf "%s|0|0\n" "$branch" >> "$TRACKING_FILE.new"
+    continue
+  fi
+
+  echo -n "Evaluating ${ORANGE}${branch}${RESET}... "
+
+  ahead=$(git rev-list --count "$MASTER_BRANCH".."$branch" 2>/dev/null || echo 0)
+  behind=$(git rev-list --count "$branch".."$MASTER_BRANCH" 2>/dev/null || echo 0)
+
+  # Write current state
+  printf "%s|%d|%d\n" "$branch" "$ahead" "$behind" >> "$TRACKING_FILE.new"
+
+    # Skip if already rebased
+  if [[ "$behind" -eq 0 ]]; then
+    echo "${GREEN}Already rebased — skipped${RESET}"
+    continue
+  fi
+
+
+  # Safe check for previous values (prevents "parameter not set" error)
+  prev_a=${prev_ahead["$branch"]:-9999999999}
+  prev_b=${prev_behind["$branch"]:-9999999999}
+
+  if [[ "$prev_a" -eq "$ahead" && "$prev_b" -eq "$behind" && "$prev_a" != 9999999999 ]]; then
+    echo "${GREEN}No change since last run — skipped${RESET}"
+    continue
+  fi
+
+  echo -n "Diverged (ahead:${ahead} behind:${behind}). Rebasing... "
+
+  clean_git_state
+
+  if ! git checkout -q "$branch" 2>/dev/null; then
+    echo "${RED}✗ Checkout failed${RESET} ${CYAN}(stale ref)${RESET}"
+    clean_git_state
+    continue
+  fi
+
+  if git rebase --quiet "$MASTER_BRANCH" 2>/dev/null; then
+    echo "${GREEN}✓ Success${RESET}"
+  else
+    conflict_files=$(git diff --name-only --diff-filter=U 2>/dev/null | head -5)
+    git rebase --abort >/dev/null 2>&1 || true
+    clean_git_state
+    echo "${RED}✗ Conflict — aborted${RESET}"
+    if [[ -n "$conflict_files" ]]; then
+      echo "   ${CYAN}Conflicting paths:${RESET} ${conflict_files}"
+    fi
+  fi
+done
+
+# Atomic update of tracking file
+mv "$TRACKING_FILE.new" "$TRACKING_FILE"
+
+# Final cleanup and restore
+clean_git_state
+git checkout -q "$current_branch" 2>/dev/null
+
+echo "\n${GREEN}Tracked rebase sweep concluded.${RESET}"
+echo "State saved to ${CYAN}${TRACKING_FILE}${RESET}"
+echo "Review divergence: ${ORANGE}git branch-status${RESET}"

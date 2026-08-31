@@ -1,0 +1,117 @@
+#!/bin/zsh
+
+declare -a COLOR_SCALE=(
+  "\033[38;5;154m"  #5faf00
+  "\033[38;5;190m"  #d7ff00
+  "\033[38;5;11m"   #ffff00
+  "\033[38;5;214m"  #ffaf00
+  "\033[38;5;166m"  #d75f00
+  "\033[38;5;1m"    #800000
+)
+
+GREEN="${COLOR_SCALE[1]}"
+ORANGE="${COLOR_SCALE[4]}"
+RED="${COLOR_SCALE[6]}"
+RESET="\033[0m"
+
+CURRENT_TIME=$(date +%s)
+
+
+# =============================================================================
+# getColorInRange - Map a value to a color from an array based on range
+# Usage: getColorInRange <min> <max> <value> "color1" "color2" "color3" ...
+# =============================================================================
+getColorInRange() {
+  local min=$1
+  local max=$2
+  local value=$3
+  shift 3
+  local colors=("$@")
+
+  # Edge cases
+  if [[ ${#colors[@]} -eq 0 ]]; then
+    echo "\033[0m"  # reset
+    return 0
+  fi
+
+  if [[ ${#colors[@]} -eq 1 ]]; then
+    echo "${colors[1]}"
+    return 0
+  fi
+
+  if (( min == max )); then
+    (( value <= min )) && echo "${colors[1]}" || echo "${colors[-1]}"
+    return
+  fi
+
+  # Integer-only normalization: map value to range 0..1000
+  local range=$(( max - min ))
+  local normalized
+
+  if (( value <= min )); then
+    normalized=0
+  elif (( value >= max )); then
+    normalized=1000
+  else
+    normalized=$(( (value - min) * 1000 / range ))
+  fi
+
+  # Map to color index
+  local last_idx=$(( ${#colors[@]} - 1 ))
+  local index=$(( normalized * last_idx / 1000 ))
+
+  echo "${colors[$((index + 1))]}"
+}
+
+echo "Date       Branch                                     Ahead/Behind  Add/Remove Files Message"
+
+git for-each-ref --format='%(refname:short) %(committerdate:short) %(committerdate:unix)' refs/heads/ | \
+sort -k2 -r | \
+while read -r branch last_date unix_timestamp; do
+  if [[ "$branch" == "master" ]]; then continue; fi
+
+  # Core metrics
+  age_days=$(( (CURRENT_TIME - unix_timestamp) / 86400 ))
+  has_tracking=$(git rev-parse --verify "$branch@{u}" 2>/dev/null || echo false)
+
+  # Deltas vs master
+  ahead=$(git rev-list --count master.."$branch" 2>/dev/null || echo 0)
+  behind=$(git rev-list --count "$branch"..master 2>/dev/null || echo 0)
+  file_delta=$(git diff --name-only master.."$branch" 2>/dev/null | wc -l | tr -d ' ')
+  line_insertions=$(git diff --shortstat master.."$branch" 2>/dev/null | grep -o '[0-9]\+ insertion' | grep -o '[0-9]\+' || echo 0)
+  line_deletions=$(git diff --shortstat master.."$branch" 2>/dev/null | grep -o '[0-9]\+ deletion' | grep -o '[0-9]\+' || echo 0)
+
+  # Branch coloring
+  if [[ "$has_tracking" != "false" ]]; then
+    ahead_remote=$(git rev-list --count "$branch@{u}".."$branch" 2>/dev/null || echo 0)
+    behind_remote=$(git rev-list --count "$branch".."$branch@{u}" 2>/dev/null || echo 0)
+    if [[ "$ahead_remote" -eq 0 && "$behind_remote" -eq 0 ]]; then
+      branch_color="$GREEN"        # Green: synced
+    else
+      branch_color="$ORANGE"  # Orange: diverged
+    fi
+  else
+    branch_color="$RED"          # Red: no tracking
+  fi
+
+  # Colors.
+  date_color=$(getColorInRange 0 60 $age_days "${COLOR_SCALE[@]}")
+  ahead_color=$(getColorInRange 0 25 $ahead "${COLOR_SCALE[@]}")
+  behind_color=$(getColorInRange 0 25 $behind "${COLOR_SCALE[@]}")
+  insertions_color=$(getColorInRange 0 500 $line_insertions "${COLOR_SCALE[@]}")
+  deletions_color=$(getColorInRange 0 500 $line_deletions "${(@Oa)COLOR_SCALE}")
+  files_color=$(getColorInRange 0 20 $file_delta "${COLOR_SCALE[@]}")
+
+  # Latest commit info
+  commit_msg=$(git log -1 --format="%s" "$branch" 2>/dev/null | cut -c1-60)
+  [[ -z "$commit_msg" ]] && commit_msg="—"
+
+
+
+  printf "${date_color}%-10s ${branch_color}%-42s${RESET} ${ahead_color}%5d${RESET}/${behind_color}%-5d${RESET} ${insertions_color}%5d${RESET}/${deletions_color}%-5d${RESET} ${files_color}%6d${RESET} %s\n" \
+    "$last_date" "$branch" "$ahead" "$behind" "$line_insertions" "$line_deletions" "$file_delta" "$commit_msg"
+done
+
+
+
+
