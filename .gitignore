@@ -14,5 +14,6 @@ atom.symlink/split-diff
 
 aws.symlink/credentials
 aws.symlink/cli/cache
+aws.symlink/config
 
 config.symlink
