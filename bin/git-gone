@@ -5,9 +5,6 @@
 #
 #   https://plus.google.com/115587336092124934674/posts/dXsagsvLakJ
 
-branch="master"
-if [ "$1" != "" ]; then
-  branch=$1
-fi
+branch="${1:-$(git default-branch)}"
 
 git branch -d $(git branch --merged | grep -v '^*' | grep -v $branch | tr -d '\n')

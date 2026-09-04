@@ -1,12 +1,8 @@
 #!/bin/sh
 #
-# Rebases the current branch onto master (or another branch you pass in).
+# Rebases the current branch onto the repo default branch
+# (or another branch you pass in).
 
-otherBranch="master"
-
-if [ "$1" != "" ]; then
-  otherBranch=$1
-fi
-
+otherBranch="${1:-$(git default-branch)}"
 
 git rebase -i "$otherBranch"

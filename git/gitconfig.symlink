@@ -32,7 +32,7 @@
   lgb = log --graph --date=relative --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ar%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)' --ancestry-path
   lgd = log --graph --date=short --all --pretty=format:'%C(yellow)%h%C(reset) - %C(normal)%ad%C(reset) %C(blue)%an%C(reset) %C(yellow)%s%C(reset) %C(normal)%D%C(reset)'
   rbc = rebase --continue
-  rbm = rebase master
+  rbm = !git rebase "$(git default-branch)"
 [color]
   diff = auto
   status = auto

@@ -1,0 +1,48 @@
+#!/bin/sh
+#
+# Print this repo's default branch without asking.
+# Uses origin/HEAD when set, then local/remote main, then master.
+
+if ! git rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "not a git repository" >&2
+  exit 1
+fi
+
+print_remote_head() {
+  remote=$1
+  ref=$(git symbolic-ref --quiet "refs/remotes/${remote}/HEAD" 2>/dev/null) || return 1
+  echo "${ref#refs/remotes/${remote}/}"
+}
+
+if print_remote_head origin; then
+  exit 0
+fi
+
+for remote in $(git remote); do
+  [ "$remote" = origin ] && continue
+  if print_remote_head "$remote"; then
+    exit 0
+  fi
+done
+
+for name in main master; do
+  if git show-ref --verify --quiet "refs/heads/${name}"; then
+    echo "$name"
+    exit 0
+  fi
+done
+
+for name in main master; do
+  if git show-ref --verify --quiet "refs/remotes/origin/${name}"; then
+    echo "$name"
+    exit 0
+  fi
+done
+
+if default=$(git config --get init.defaultBranch); then
+  echo "$default"
+  exit 0
+fi
+
+echo "could not determine default branch" >&2
+exit 1
