@@ -12,6 +12,9 @@ atom.symlink/themes
 atom.symlink/git-time-machine
 atom.symlink/split-diff
 
+# Built mux-backed gh (source is gh-op-mux/)
+bin/gh
+
 # OS / editor junk
 .DS_Store
 .vscode/
