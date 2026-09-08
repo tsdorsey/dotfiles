@@ -2,6 +2,7 @@ package main
 
 import (
 	"os"
+	"path/filepath"
 	"strings"
 )
 
@@ -77,4 +78,24 @@ func childEnv(fromClient map[string]string) []string {
 		env = append(env, k+"="+v)
 	}
 	return env
+}
+
+func childEnvWithGHFirst(fromClient map[string]string, ghPath string) []string {
+	env := childEnv(fromClient)
+	dir := filepath.Dir(ghPath)
+	out := make([]string, 0, len(env)+1)
+	found := false
+	for _, kv := range env {
+		k, v, ok := strings.Cut(kv, "=")
+		if !ok || k != "PATH" {
+			out = append(out, kv)
+			continue
+		}
+		found = true
+		out = append(out, "PATH="+dir+string(os.PathListSeparator)+v)
+	}
+	if !found {
+		out = append(out, "PATH="+dir)
+	}
+	return out
 }

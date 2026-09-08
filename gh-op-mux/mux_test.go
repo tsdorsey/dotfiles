@@ -23,9 +23,19 @@ func TestMain(m *testing.M) {
 	if err != nil {
 		panic(err)
 	}
-	muxBin = filepath.Join(dir, "gh")
+	muxDir := filepath.Join(dir, "mux")
+	realDir := filepath.Join(dir, "real")
+	if err := os.MkdirAll(muxDir, 0o700); err != nil {
+		panic(err)
+	}
+	if err := os.MkdirAll(realDir, 0o700); err != nil {
+		panic(err)
+	}
+	// Real gh lives in its own directory named "gh" so PATH-first
+	// lookup cannot hit the mux binary.
+	muxBin = filepath.Join(muxDir, "gh")
 	opBin = filepath.Join(dir, "op")
-	ghBin = filepath.Join(dir, "real-gh")
+	ghBin = filepath.Join(realDir, "gh")
 	if err := build("./", muxBin); err != nil {
 		panic(err)
 	}
@@ -169,9 +179,21 @@ func TestRequestBecomesOpPluginRunWithCwd(t *testing.T) {
 	}
 
 	argv := h.read("op-argv-lines")
-	wantPrefix := "plugin\nrun\n--\n" + ghBin + "\npr\nview\n12\n"
+	wantPrefix := "plugin\nrun\n--\ngh\npr\nview\n12\n"
 	if argv != wantPrefix {
 		t.Fatalf("op argv:\n got %q\nwant %q", argv, wantPrefix)
+	}
+	env := h.read("op-env")
+	wantPathPrefix := "PATH=" + filepath.Dir(ghBin)
+	gotPath := ""
+	for _, line := range strings.Split(env, "\n") {
+		if strings.HasPrefix(line, "PATH=") {
+			gotPath = line
+			break
+		}
+	}
+	if !strings.HasPrefix(gotPath, wantPathPrefix+":") && gotPath != wantPathPrefix {
+		t.Fatalf("child PATH should start with %q, got %q", wantPathPrefix, gotPath)
 	}
 	cwd := strings.TrimSpace(h.read("op-cwd"))
 	want, err := filepath.EvalSymlinks(work)

@@ -138,10 +138,13 @@ func serveConn(raw net.Conn) {
 		return
 	}
 
-	args := append([]string{"plugin", "run", "--", ghPath}, req.Argv...)
+	// op identifies the GitHub plugin by the name "gh", not a path.
+	// Put the resolved real binary's directory first on PATH so op
+	// execs that gh and cannot recurse into this mux.
+	args := append([]string{"plugin", "run", "--", "gh"}, req.Argv...)
 	cmd := exec.Command(opPath, args...)
 	cmd.Dir = req.Cwd
-	cmd.Env = childEnv(req.Env)
+	cmd.Env = childEnvWithGHFirst(req.Env, ghPath)
 	cmd.SysProcAttr = &syscall.SysProcAttr{Setpgid: true}
 
 	stdinR, stdinW, err := os.Pipe()
