@@ -1,10 +1,12 @@
 #!/bin/sh
 #
-# Get master (or another branch you pass in) up to date and then end up back where you started.
+# Get the default branch (or another branch you pass in) up to date
+# and then end up back where you started.
 
 origin="origin"
-localBranch="master"
-remoteBranch="master"
+defaultBranch=$(git default-branch)
+localBranch="$defaultBranch"
+remoteBranch="$defaultBranch"
 currentBranch=$(git branch --show-current)
 
 if [ "$1" != "" ]; then

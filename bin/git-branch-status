@@ -63,23 +63,25 @@ getColorInRange() {
   echo "${colors[$((index + 1))]}"
 }
 
+default_branch=$(git default-branch)
+
 echo "Date       Branch                                     Ahead/Behind  Add/Remove Files Message"
 
 git for-each-ref --format='%(refname:short) %(committerdate:short) %(committerdate:unix)' refs/heads/ | \
 sort -k2 -r | \
 while read -r branch last_date unix_timestamp; do
-  if [[ "$branch" == "master" ]]; then continue; fi
+  if [[ "$branch" == "$default_branch" ]]; then continue; fi
 
   # Core metrics
   age_days=$(( (CURRENT_TIME - unix_timestamp) / 86400 ))
   has_tracking=$(git rev-parse --verify "$branch@{u}" 2>/dev/null || echo false)
 
-  # Deltas vs master
-  ahead=$(git rev-list --count master.."$branch" 2>/dev/null || echo 0)
-  behind=$(git rev-list --count "$branch"..master 2>/dev/null || echo 0)
-  file_delta=$(git diff --name-only master.."$branch" 2>/dev/null | wc -l | tr -d ' ')
-  line_insertions=$(git diff --shortstat master.."$branch" 2>/dev/null | grep -o '[0-9]\+ insertion' | grep -o '[0-9]\+' || echo 0)
-  line_deletions=$(git diff --shortstat master.."$branch" 2>/dev/null | grep -o '[0-9]\+ deletion' | grep -o '[0-9]\+' || echo 0)
+  # Deltas vs the default branch
+  ahead=$(git rev-list --count "$default_branch".."$branch" 2>/dev/null || echo 0)
+  behind=$(git rev-list --count "$branch".."$default_branch" 2>/dev/null || echo 0)
+  file_delta=$(git diff --name-only "$default_branch".."$branch" 2>/dev/null | wc -l | tr -d ' ')
+  line_insertions=$(git diff --shortstat "$default_branch".."$branch" 2>/dev/null | grep -o '[0-9]\+ insertion' | grep -o '[0-9]\+' || echo 0)
+  line_deletions=$(git diff --shortstat "$default_branch".."$branch" 2>/dev/null | grep -o '[0-9]\+ deletion' | grep -o '[0-9]\+' || echo 0)
 
   # Branch coloring
   if [[ "$has_tracking" != "false" ]]; then

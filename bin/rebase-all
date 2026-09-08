@@ -3,7 +3,7 @@
 
 set -uo pipefail
 
-MASTER_BRANCH="master"
+DEFAULT_BRANCH="${1:-$(git default-branch)}"
 
 RED="\033[31m"
 ORANGE="\033[38;5;214m"
@@ -38,7 +38,7 @@ if [[ -f "$TRACKING_FILE" ]]; then
   done < "$TRACKING_FILE"
 fi
 
-echo "${GREEN}Initiating tracked rebase sweep onto ${MASTER_BRANCH}...${RESET}"
+echo "${GREEN}Initiating tracked rebase sweep onto ${DEFAULT_BRANCH}...${RESET}"
 echo "Originating branch: ${ORANGE}${current_branch}${RESET}\n"
 
 clean_git_state
@@ -47,15 +47,15 @@ clean_git_state
 touch "$TRACKING_FILE.new"   # Temporary file for atomic write
 
 git for-each-ref --format='%(refname:short)' refs/heads/ | while read -r branch; do
-  if [[ "$branch" == "$MASTER_BRANCH" || "$branch" == "$current_branch" ]]; then
+  if [[ "$branch" == "$DEFAULT_BRANCH" || "$branch" == "$current_branch" ]]; then
     printf "%s|0|0\n" "$branch" >> "$TRACKING_FILE.new"
     continue
   fi
 
   echo -n "Evaluating ${ORANGE}${branch}${RESET}... "
 
-  ahead=$(git rev-list --count "$MASTER_BRANCH".."$branch" 2>/dev/null || echo 0)
-  behind=$(git rev-list --count "$branch".."$MASTER_BRANCH" 2>/dev/null || echo 0)
+  ahead=$(git rev-list --count "$DEFAULT_BRANCH".."$branch" 2>/dev/null || echo 0)
+  behind=$(git rev-list --count "$branch".."$DEFAULT_BRANCH" 2>/dev/null || echo 0)
 
   # Write current state
   printf "%s|%d|%d\n" "$branch" "$ahead" "$behind" >> "$TRACKING_FILE.new"
@@ -86,7 +86,7 @@ git for-each-ref --format='%(refname:short)' refs/heads/ | while read -r branch;
     continue
   fi
 
-  if git rebase --quiet "$MASTER_BRANCH" 2>/dev/null; then
+  if git rebase --quiet "$DEFAULT_BRANCH" 2>/dev/null; then
     echo "${GREEN}✓ Success${RESET}"
   else
     conflict_files=$(git diff --name-only --diff-filter=U 2>/dev/null | head -5)
