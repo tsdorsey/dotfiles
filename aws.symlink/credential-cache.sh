@@ -83,6 +83,18 @@ quote_sh() {
   printf "'%s'" "$escaped"
 }
 
+# No wrapping quotes. SDK v1 stops at the first closing quote and drops the
+# arguments. SDK v2 strips a quote pair from both ends. The JS SDK and AWS CLI
+# keep the quotes and then try to execute them as part of the filename.
+# Spaces in the path are backslash-escaped so the shell keeps it one word.
+quote_credential_process() {
+  local path="$1"
+  local profile="$2"
+  local escaped_path
+  escaped_path=$(printf '%s' "$path" | sed 's/\\/\\\\/g; s/ /\\ /g')
+  printf '%s print %s' "$escaped_path" "$profile"
+}
+
 atomic_write() {
   local dest="$1"
   local content="$2"
@@ -126,11 +138,10 @@ refresh_profile() {
     return 1
   }
   atomic_write "$(cache_json_path "$profile")" "$canonical" || return 1
-  config_body=$(printf '[profile %s_cached]\nregion = %s\ncredential_process = %s print %s\n' \
+  config_body=$(printf '[profile %s_cached]\nregion = %s\ncredential_process = %s\n' \
     "$profile" \
     "$region" \
-    "$(quote_sh "$SCRIPT_PATH")" \
-    "$(quote_sh "$profile")") || return 1
+    "$(quote_credential_process "$SCRIPT_PATH" "$profile")") || return 1
   atomic_write "$(cache_config_path "$profile")" "$config_body" || return 1
 }
 
