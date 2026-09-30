@@ -30,6 +30,7 @@ iterm/preferences/com.googlecode.iterm2.plist
 
 aws.symlink/credentials
 aws.symlink/cli/cache
+aws.symlink/cache/
 aws.symlink/config
 
 # ~/.config is an app-data dump: caches, logs, sessions, tokens
