@@ -85,6 +85,11 @@ if (mode === "request") {
 // ---- daemon --------------------------------------------------------------
 
 if (mode === "daemon") {
+  // 1Password names its CLI approval dialog after this process, which otherwise
+  // shows up as "Node". Set this before the first aws/op spawn. macOS may
+  // truncate it; the next prompt will show whether the full title is used.
+  process.title = `AWS:Cache[${profile}]`;
+
   const watchPid = rest[0];
   const key = crypto.randomBytes(32);
   const state = { region: "", expiresAt: NaN, nextRefreshAttempt: 0, isDaemon: false, server: null };
@@ -170,7 +175,13 @@ if (mode === "daemon") {
     }
   };
 
-  const shellQuote = (value) => `'${String(value).replace(/'/g, `'\\''`)}'`;
+  // No wrapping quotes. SDK v1 stops at the first closing quote and drops the
+  // arguments. The JS SDK and AWS CLI keep the quotes and try to execute them
+  // as part of the filename. Spaces in the path are backslash-escaped.
+  const credentialProcess = (scriptPath, profileName) => {
+    const escapedPath = String(scriptPath).replace(/\\/g, "\\\\").replace(/ /g, "\\ ");
+    return `${escapedPath} print ${profileName}`;
+  };
 
   const runAws = (args) => {
     const env = { ...process.env, AWS_SDK_LOAD_CONFIG: "1" };
@@ -212,7 +223,7 @@ if (mode === "daemon") {
     atomicWrite(paths.json, encrypt(JSON.stringify(creds)));
     atomicWrite(
       paths.config,
-      `[profile ${profile}_cached]\nregion = ${region}\ncredential_process = ${shellQuote(SCRIPT_PATH)} print ${shellQuote(profile)}\n`,
+      `[profile ${profile}_cached]\nregion = ${region}\ncredential_process = ${credentialProcess(SCRIPT_PATH, profile)}\n`,
     );
     state.region = region;
     state.expiresAt = creds.Expiration ? Date.parse(creds.Expiration) : NaN;
