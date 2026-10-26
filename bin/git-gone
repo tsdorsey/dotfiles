@@ -4,7 +4,75 @@
 # our favorite @tekkub:
 #
 #   https://plus.google.com/115587336092124934674/posts/dXsagsvLakJ
+#
+# `git branch` marks a linked worktree with a leading "+". Merged branches
+# checked out there are removed with that worktree, then deleted. The
+# current branch and the main worktree are left alone. A worktree stays when
+# its branch is not merged to its upstream. Uncommitted files in a removed
+# worktree are discarded.
 
-branch="${1:-$(git default-branch)}"
+if [ $# -gt 0 ]; then
+  branch=$1
+else
+  branch=$(git default-branch) || exit 1
+fi
 
-git branch -d $(git branch --merged | grep -v '^*' | grep -v $branch | tr -d '\n')
+porcelain=$(git worktree list --porcelain) || exit 1
+main_worktree=$(printf '%s\n' "$porcelain" | sed -n 's/^worktree //p' | head -n 1)
+if [ -z "$main_worktree" ]; then
+  echo "could not determine main worktree" >&2
+  exit 1
+fi
+
+canon_dir() {
+  if [ -d "$1" ]; then
+    (unset CDPATH && cd -- "$1" && pwd -P)
+  else
+    printf '%s\n' "$1"
+  fi
+}
+
+main_worktree=$(canon_dir "$main_worktree")
+
+refs=$(
+  git for-each-ref \
+    --merged HEAD \
+    --format='%(HEAD)%09%(refname:short)%09%(worktreepath)' \
+    refs/heads
+) || exit 1
+
+failed=0
+tab=$(printf '\t')
+while IFS="$tab" read -r head name worktree; do
+  [ -n "$name" ] || continue
+  [ "$head" = "*" ] && continue
+  [ "$name" = "$branch" ] && continue
+
+  if [ -n "$worktree" ]; then
+    if [ "$(canon_dir "$worktree")" = "$main_worktree" ]; then
+      continue
+    fi
+
+    if upstream=$(git rev-parse --symbolic-full-name "${name}@{upstream}" 2>/dev/null); then
+      if ! git merge-base --is-ancestor "$name" "$upstream"; then
+        printf "error: the branch '%s' is not fully merged to '%s'; leaving worktree '%s'\n" \
+          "$name" "$upstream" "$worktree" >&2
+        failed=1
+        continue
+      fi
+    fi
+
+    if git worktree remove --force "$worktree" </dev/null; then
+      printf 'Removed worktree %s\n' "$worktree"
+    else
+      failed=1
+      continue
+    fi
+  fi
+
+  git branch -d "$name" </dev/null || failed=1
+done <<EOF
+$refs
+EOF
+
+exit "$failed"
