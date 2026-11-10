@@ -156,7 +156,7 @@ type = "plugin_action"
 # headless_rows = 40
 
 [worktrees]
-directory = "~/projects/.worktrees"
+directory = "~/.cursor/worktrees"
 
 [ui]
 # Sidebar width (auto-scaled based on workspace names, this sets the default)
