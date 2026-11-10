@@ -43,6 +43,8 @@
   editor = cursor --wait
   ignorecase = false
   pager = less -FRX
+  # Copies .env files into new worktrees. See git/hooks/dispatch.
+  hooksPath = ~/.dotfiles/git/hooks
 [apply]
   whitespace = nowarn
 [mergetool]

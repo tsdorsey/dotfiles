@@ -1,0 +1,249 @@
+#!/usr/bin/env bash
+# Copy gitignored local files from the primary checkout into a linked worktree:
+# .env files, node_modules trees, and Yarn's project-local cache.
+# Prints paths only. Never prints file contents.
+set -euo pipefail
+
+# Some Git versions export GIT_DIR into hooks. Unset those so `git -C`
+# reads the primary checkout instead of this worktree.
+git_env=$(git rev-parse --local-env-vars 2>/dev/null || true)
+if [[ -n "$git_env" ]]; then
+  # shellcheck disable=SC2086
+  unset $git_env
+fi
+
+refresh=0
+dest=""
+while [[ $# -gt 0 ]]; do
+  case "$1" in
+    --refresh) refresh=1 ;;
+    --dry-run) refresh=0; dry=1 ;;
+    -h|--help)
+      echo "usage: git copy-local-env [--refresh] [--dry-run] <dest-worktree>" >&2
+      exit 2
+      ;;
+    --) shift; break ;;
+    -*)
+      echo "unknown flag: $1" >&2
+      exit 2
+      ;;
+    *)
+      if [[ -n "$dest" ]]; then
+        echo "unexpected argument: $1" >&2
+        exit 2
+      fi
+      dest=$1
+      ;;
+  esac
+  shift
+done
+
+dry=${dry:-0}
+
+if [[ -z "$dest" ]]; then
+  echo "dest worktree path required" >&2
+  exit 2
+fi
+
+if [[ ! -d "$dest" ]]; then
+  echo "dest is not a directory: $dest" >&2
+  exit 2
+fi
+
+dest=$(cd "$dest" && pwd)
+
+abs_common() {
+  local dir=$1
+  local common
+  common=$(git -C "$dir" rev-parse --git-common-dir)
+  if [[ "$common" != /* ]]; then
+    common=$dir/$common
+  fi
+  (cd "$common" && pwd)
+}
+
+if ! git -C "$dest" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "dest is not a git checkout: $dest" >&2
+  exit 2
+fi
+
+common=$(abs_common "$dest")
+primary=$(dirname "$common")
+
+if [[ ! -d "$primary" ]] || ! git -C "$primary" rev-parse --is-inside-work-tree >/dev/null 2>&1; then
+  echo "could not resolve primary checkout from $dest" >&2
+  exit 2
+fi
+
+primary=$(cd "$primary" && pwd)
+
+if [[ "$(abs_common "$primary")" != "$common" ]]; then
+  echo "dest is not a worktree of $primary" >&2
+  exit 2
+fi
+
+echo "primary: $primary"
+echo "dest: $dest"
+
+if [[ "$dest" == "$primary" ]]; then
+  echo "dest is the primary checkout"
+  exit 0
+fi
+
+copied=0
+skipped=0
+deps_failed=0
+if [[ "$(uname -s)" == "Darwin" ]]; then
+  # APFS clonefile shares disk space until either side writes a file.
+  cp_flags=(-cRp)
+else
+  cp_flags=(-Rp)
+fi
+
+copy_missing() {
+  local rel=$1
+  local src="$primary/$rel"
+  local target="$dest/$rel"
+
+  case "$rel" in
+    ""|/*|..|../*|*/..|*/../*)
+      echo "refusing path: $rel" >&2
+      deps_failed=1
+      return
+      ;;
+  esac
+  case "$target" in
+    "$dest"/*) ;;
+    *)
+      echo "refusing path: $rel" >&2
+      deps_failed=1
+      return
+      ;;
+  esac
+
+  if [[ -e "$target" || -L "$target" ]]; then
+    echo "exists: $rel"
+    skipped=$((skipped + 1))
+    return
+  fi
+
+  if [[ "$dry" -eq 1 ]]; then
+    echo "would-copy: $rel"
+    copied=$((copied + 1))
+    return
+  fi
+
+  mkdir -p "$(dirname "$target")"
+  if ! cp "${cp_flags[@]}" "$src" "$target"; then
+    rm -rf -- "$target"
+    echo "failed: $rel" >&2
+    deps_failed=1
+    return
+  fi
+  echo "copied: $rel"
+  copied=$((copied + 1))
+}
+
+copy_if_untracked() {
+  local rel=$1
+  local src="$primary/$rel"
+  if [[ ! -e "$src" && ! -L "$src" ]]; then
+    return
+  fi
+  # A tracked path is already in the new checkout. Symlinks are not
+  # directories to Git, so a trailing-slash gitignore misses them.
+  if [[ -d "$src" && ! -L "$src" ]]; then
+    if git -C "$primary" ls-files -- "$rel" | grep -q .; then
+      return
+    fi
+  elif git -C "$primary" ls-files --error-unmatch -- "$rel" >/dev/null 2>&1; then
+    return
+  fi
+  copy_missing "$rel"
+}
+
+while IFS= read -r -d '' rel; do
+  base=${rel##*/}
+  case "$base" in
+    .env|.env.*) ;;
+    *) continue ;;
+  esac
+  case "$base" in
+    *.example|*.sample) continue ;;
+  esac
+  case "$rel" in
+    node_modules/*|*/node_modules/*) continue ;;
+  esac
+
+  src="$primary/$rel"
+  target="$dest/$rel"
+  if [[ ! -f "$src" ]]; then
+    continue
+  fi
+
+  if [[ -e "$target" && "$refresh" -ne 1 ]]; then
+    echo "exists: $rel"
+    skipped=$((skipped + 1))
+    continue
+  fi
+
+  if [[ "$dry" -eq 1 ]]; then
+    if [[ -e "$target" ]]; then
+      echo "would-refresh: $rel"
+    else
+      echo "would-copy: $rel"
+    fi
+    copied=$((copied + 1))
+    continue
+  fi
+
+  existed=0
+  if [[ -e "$target" ]]; then
+    existed=1
+  fi
+  mkdir -p "$(dirname "$target")"
+  cp -p "$src" "$target"
+  if [[ "$existed" -eq 1 ]]; then
+    echo "refreshed: $rel"
+  else
+    echo "copied: $rel"
+  fi
+  copied=$((copied + 1))
+done < <(git -C "$primary" ls-files -o -i --exclude-standard -z -- \
+  ':(glob).env' ':(glob).env.*' ':(glob)**/.env' ':(glob)**/.env.*')
+
+copy_node_modules() {
+  while IFS= read -r -d '' rel; do
+    rel=${rel%/}
+    case "$rel" in
+      node_modules|*/node_modules) ;;
+      *) continue ;;
+    esac
+    case "$rel" in
+      node_modules/*|*/node_modules/*) continue ;;
+    esac
+    copy_missing "$rel"
+  done < <(git -C "$primary" ls-files "$@" --directory -z -- \
+    ':(glob)node_modules' ':(glob)**/node_modules')
+}
+
+copy_node_modules -o -i --exclude-standard
+# `node_modules/` in gitignore matches a directory and misses a symlink.
+copy_node_modules -o --exclude-standard
+
+# Yarn's global cache is already shared. Copy the project-local cache and the
+# Plug'n'Play files when they are not already tracked. --refresh does not
+# replace these; an existing tree stays in place.
+for rel in .yarn/cache .yarn/unplugged .pnp.cjs .pnp.loader.mjs; do
+  copy_if_untracked "$rel"
+done
+
+if [[ "$dry" -eq 1 ]]; then
+  echo "would-write: $copied"
+else
+  echo "wrote: $copied"
+fi
+echo "left-in-place: $skipped"
+if [[ "$deps_failed" -ne 0 ]]; then
+  exit 1
+fi

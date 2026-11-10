@@ -1,0 +1,52 @@
+#!/bin/sh
+# Global git hooks (core.hooksPath).
+#
+# post-checkout copies gitignored .env files, node_modules, and a project-local
+# Yarn cache when a linked worktree is created.
+# Every hook then runs the repository's own $GIT_COMMON_DIR/hooks/<name>.
+#
+# reference-transaction, post-index-change, and fsmonitor-watchman are not
+# installed here. Git runs those often enough that a global stub slows
+# ordinary commands, and a repo that needs them sets its own core.hooksPath.
+
+set -u
+
+hook=$(basename "$0")
+hook_dir=$(CDPATH='' cd -- "$(dirname "$0")" && pwd)
+dotfiles=$(CDPATH='' cd -- "$hook_dir/../.." && pwd)
+
+if [ "$hook" = "post-checkout" ]; then
+  prev=${1:-}
+  flag=${3:-}
+  case "$prev" in
+    *[!0]*|"") ;;
+    *)
+      if [ "$flag" = "1" ]; then
+        git_dir=$(git rev-parse --path-format=absolute --git-dir 2>/dev/null || true)
+        common_dir=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+        if [ -n "$git_dir" ] && [ -n "$common_dir" ] && [ "$git_dir" != "$common_dir" ]; then
+          toplevel=$(git rev-parse --path-format=absolute --show-toplevel 2>/dev/null || true)
+          script="$dotfiles/bin/git-copy-local-env"
+          if [ -n "$toplevel" ] && [ -x "$script" ]; then
+            "$script" "$toplevel" || echo "worktree local copy failed for $toplevel" >&2
+          fi
+        fi
+      fi
+      ;;
+  esac
+fi
+
+common_dir=$(git rev-parse --path-format=absolute --git-common-dir 2>/dev/null || true)
+if [ -n "$common_dir" ]; then
+  local_hook="$common_dir/hooks/$hook"
+  if [ -f "$local_hook" ] && [ -x "$local_hook" ]; then
+    self=$(realpath "$0" 2>/dev/null || printf '%s\n' "$0")
+    target=$(realpath "$local_hook" 2>/dev/null || printf '%s\n' "$local_hook")
+    if [ "$self" != "$target" ]; then
+      "$local_hook" "$@"
+      exit $?
+    fi
+  fi
+fi
+
+exit 0
